@@ -1,0 +1,115 @@
+name: Verify PortRewire
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  core-and-independent-oracle:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - name: Check deterministic committed standalone build
+        run: git diff --exit-code -- dist/port-rewire.html web/demo-data.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: port-rewire-core-node-${{ matrix.node }}
+          path: artifacts/oracle/
+          if-no-files-found: error
+  native-pd-cli:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install official distribution Pd engine for testing only
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y puredata-core
+      - run: npm run demo
+      - run: python3 scripts/native_gate.py --app-callers artifacts/demo --output artifacts/native
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: port-rewire-native-cli
+          path: artifacts/native/
+          if-no-files-found: error
+  sandboxed-browser-and-download:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --ignore-scripts
+      - run: npx --no-install playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install --no-install-recommends -y fonts-noto-cjk
+      - run: npm run demo && npm run build
+      - name: Test actual standalone UI and download with Chromium sandbox enabled
+        run: |
+          mkdir -p artifacts/browser
+          npm run serve > artifacts/browser/server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = 1
+          npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: port-rewire-browser-evidence
+          path: artifacts/browser/
+          if-no-files-found: error
+  native-pd-browser-download:
+    needs: sandboxed-browser-and-download
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: port-rewire-browser-evidence
+          path: artifacts/browser-download
+      - name: Install official distribution Pd engine for testing only
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y puredata-core
+      - name: Native consumer verifies actual browser-exported caller bytes
+        run: python3 scripts/native_gate.py --app-callers artifacts/browser-download/extracted --output artifacts/native-browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: port-rewire-native-browser
+          path: artifacts/native-browser/
+          if-no-files-found: error
