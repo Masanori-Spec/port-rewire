@@ -1,0 +1,5 @@
+#N canvas 0 0 240 200 10;
+#X text 20 20 Own-authored unrelated pass-through abstraction;
+#X obj 40 70 inlet;
+#X obj 40 130 outlet;
+#X connect 1 0 2 0;

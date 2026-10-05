@@ -1,0 +1,11 @@
+#N canvas 0 0 640 320 10;
+#X text 20 20 Own-authored gate: A then B then quit without audio or MIDI;
+#X obj 40 60 loadbang;
+#X obj 40 100 t b b b;
+#X obj 40 160 caller-a;
+#X obj 200 160 caller-b;
+#X msg 400 160 \; pd quit;
+#X connect 1 0 2 0;
+#X connect 2 2 3 0;
+#X connect 2 1 4 0;
+#X connect 2 0 5 0;

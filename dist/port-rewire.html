@@ -1,0 +1,330 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Review and repair Pure Data caller wiring after a control-port reorder. Offline, exact-token migration."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src data:; font-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'"><title>PortRewire · Pd port migration</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23192736'/%3E%3Cpath d='M7 8h5l8 16h5M7 24h5L20 8h5' fill='none' stroke='%238cefaf' stroke-width='3'/%3E%3C/svg%3E"><style>:root{font-family:Inter,"Noto Sans CJK JP","Yu Gothic",system-ui,sans-serif;color:#192736;background:#edf1f5;font-size:16px;line-height:1.6;--ink:#192736;--muted:#5a6978;--line:#cdd6df;--mint:#9bffc7;--blue:#204aca}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,select,input::file-selector-button{cursor:pointer}button{border:1px solid var(--line);border-radius:7px;padding:10px 16px;font-weight:650;background:white;color:var(--ink);min-height:44px}button:hover:not(:disabled){border-color:#192736;background:#eaf1f9}button:disabled{opacity:.45;cursor:not-allowed}button.primary{background:var(--ink);border-color:var(--ink);color:white}button.primary:hover:not(:disabled){background:#314458}button.small{font-size:.875rem;padding:6px 12px;min-height:38px}.quiet{background:transparent}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #204aca;outline-offset:4px}.skip{position:fixed;top:-100px;left:20px;background:white;padding:10px;z-index:10}.skip:focus{top:10px}header{padding:20px 4.5%;display:flex;align-items:center;justify-content:space-between;background:#192736;color:white;border-bottom:1px solid #394756;gap:20px}.brand{font-size:1.4rem;display:flex;align-items:center;gap:12px;font-weight:750;letter-spacing:-.04em}.mark{border:2px solid var(--mint);color:var(--mint);font-size:1.8rem;line-height:1;display:grid;place-items:center;width:43px;height:43px;border-radius:10px}.brand-sub{display:block;font-size:.65rem;font-weight:500;letter-spacing:.13em;color:#cbd7e6}.head-right{display:flex;align-items:center;gap:18px}.offline{font-size:.8125rem;color:#d4dfeb}main{max-width:1400px;padding:34px 4.5% 20px;margin:auto}.intro{display:flex;justify-content:space-between;align-items:center;gap:32px;margin-bottom:24px}.eyebrow{font-size:.75rem;letter-spacing:.11em;font-weight:700;color:var(--blue);margin:0 0 8px}h1{font-size:clamp(1.8rem,3vw,2.8rem);line-height:1.35;letter-spacing:-.035em;margin:0 0 14px;max-width:900px}.lede{margin:0;color:var(--muted);font-size:1rem;max-width:760px}.intro-actions{display:flex;flex-direction:column;min-width:185px;gap:10px}.scope{border:1px solid var(--line);border-left:4px solid #326653;border-radius:5px;background:#e5f0e9;padding:12px 16px;display:flex;gap:16px;font-size:.875rem;align-items:baseline}.scope strong{white-space:nowrap}.scope span{min-width:0}#status{font-size:.9375rem;margin:16px 0;min-height:26px}#status[data-kind=error]{background:#fff0ed;border-left:4px solid #b23822;padding:12px 16px;color:#862715}#status[data-kind=success]{color:#235c44}.workgrid{display:grid;grid-template-columns:minmax(250px,340px) minmax(0,1fr);gap:20px;align-items:start}.panel{background:white;border:1px solid var(--line);border-radius:12px;padding:24px;box-shadow:0 3px 0 #e1e7ed}.section-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.step{font-size:.8125rem;background:#edf2f8;color:var(--blue);font-weight:700;border:1px solid #cdd9ee;min-width:32px;height:32px;display:grid;place-items:center;border-radius:50%;font-variant-numeric:tabular-nums}h2{font-size:1.125rem;line-height:1.5;margin:0;font-weight:750}h3{font-size:1rem;margin:0}.hint{font-size:.875rem;color:var(--muted);line-height:1.7}.badge{font-size:.75rem;color:#4b6074;background:#edf2f6;border:1px solid #dde4eb;border-radius:99px;padding:3px 10px;white-space:nowrap}.section-head>.badge{margin-left:auto}.source-card{border:1px solid var(--line);border-radius:8px;padding:15px;margin-top:16px;background:#fbfcfe}.source-card label{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;font-size:.875rem}.chip{font-size:.6875rem;font-weight:700;padding:3px 7px;border:1px solid #cad1db;border-radius:4px;white-space:nowrap}.chip.old{color:#7f481b;background:#fff0de;border-color:#e0bb89}.chip.revised{color:#20573e;background:#e6f8ed;border-color:#91cda7}.chip.callers{color:#284595;background:#edf1ff;border-color:#adbae3}input[type=file]{width:100%;font-size:.8125rem;color:#45596d;min-width:0}input::file-selector-button{border:1px solid #b9c5d2;background:white;border-radius:5px;padding:7px 10px;color:#192736;margin-right:10px;min-height:36px;font-size:.8125rem}.file-summary{font-size:.8125rem;overflow-wrap:anywhere;margin:10px 0 0;font-family:ui-monospace,monospace;color:#526274}.contract{margin-top:24px;border-top:1px solid var(--line);padding-top:16px}.contract summary{font-size:.875rem;cursor:pointer;font-weight:650}.contract label{font-size:.875rem}.contract button{margin-top:12px}.port-maps{margin:20px 0 26px}.port-group{border:1px solid var(--line);border-radius:8px;margin-top:16px;overflow:hidden}.port-heading{display:flex;justify-content:space-between;align-items:center;background:#f2f5fa;padding:11px 16px;gap:12px}.port-heading strong{font-size:.875rem}.port-heading span{font-size:.75rem;color:var(--muted)}.port-row{display:grid;grid-template-columns:minmax(0,1fr) 25px minmax(0,1fr);align-items:center;gap:12px;padding:12px 16px;border-top:1px solid #e0e6ed}.port-id{display:flex;align-items:center;gap:9px;font-family:ui-monospace,monospace;font-size:.875rem}.port-id b{border:1px solid #e0bb89;background:#fff0de;color:#7f481b;width:27px;height:27px;display:grid;place-items:center;border-radius:4px}.port-context{font-size:.75rem;color:#5a6978;line-height:1.5;overflow-wrap:anywhere;max-height:2.8em;overflow:hidden;margin-top:4px}.port-row select{width:100%;min-height:43px;border:1px solid #91bca4;border-radius:5px;padding:6px 8px;background:#f1faf5;color:#164732;font-family:ui-monospace,monospace;font-size:.875rem}.port-arrow{color:#6b7c8d;text-align:center}.instances-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.instance{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:7px;margin:9px 0;cursor:pointer}.instance input{width:18px;height:18px;accent-color:var(--blue);margin:5px 0 0;flex-shrink:0}.instance span{min-width:0}.instance strong{display:block;font-family:ui-monospace,monospace;font-size:.875rem;overflow-wrap:anywhere}.instance small{display:block;font-size:.8125rem;color:var(--muted)}.reviewbar{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;display:flex;align-items:center;gap:20px;justify-content:space-between}.reviewbar p{margin:0}.reviewbar button{flex-shrink:0}.empty{background:#f5f7fa;border:1px dashed #c7d1de;border-radius:8px;padding:28px 24px;text-align:center;margin:20px 0 0;color:var(--muted)}.empty>span{font-family:ui-monospace,monospace;color:#748395;font-size:1.3rem}.empty p{font-size:.9375rem;max-width:620px;margin:8px auto}.preview{margin-top:20px}.preview .section-head button{margin-left:auto}.stats{display:flex;gap:28px;flex-wrap:wrap;padding:18px 20px;background:#edf8f0;border:1px solid #abd3b6;border-radius:7px;margin:20px 0}.stat b{font-size:1.625rem;line-height:1.2;display:block}.stat span{font-size:.8125rem;color:#365947}.changes{display:grid;grid-template-columns:1fr 1fr;gap:10px}.change{border:1px solid var(--line);border-radius:7px;padding:13px;min-width:0}.change-name{font-size:.8125rem;font-family:ui-monospace,monospace;color:var(--muted);overflow-wrap:anywhere}.change-code{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font: .8125rem/1.7 ui-monospace,monospace;margin-top:7px}.before{color:#814516;background:#fff0de;padding:3px 6px;border-radius:4px}.after{color:#135335;background:#dbf5e5;padding:3px 6px;border-radius:4px}.bundle-list{font: .8125rem/1.9 ui-monospace,monospace;overflow-wrap:anywhere}.footnotes{display:grid;grid-template-columns:1fr 1fr;gap:35px;margin:30px 3px 0}.footnotes h3{font-size:.875rem}.footnotes p{font-size:.8125rem;color:var(--muted);margin-top:6px}footer{border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;padding-top:18px;margin-top:22px;font-size:.75rem;color:var(--muted)}[hidden]{display:none!important}@media(max-width:1050px){main{padding:28px 3.5% 20px}.workgrid{grid-template-columns:minmax(240px,300px) minmax(0,1fr)}.panel{padding:20px}.section-head>.badge{display:none}.reviewbar{align-items:stretch;flex-direction:column;gap:12px}.changes{grid-template-columns:1fr}.intro{gap:24px}h1{font-size:2rem}}@media(max-width:720px){header{padding:16px 5%}.brand{font-size:1.2rem}.offline{display:none}.brand-sub{font-size:.57rem}.mark{width:36px;height:36px;font-size:1.4rem}.head-right{gap:4px}main{padding:24px 5% 16px}.intro{display:block}h1{font-size:1.65rem;line-height:1.5;letter-spacing:-.04em}.eyebrow{font-size:.65rem}.intro-actions{flex-direction:row;gap:8px;margin-top:20px}.intro-actions button{flex:1;padding:10px;font-size:.875rem}.scope{display:block;font-size:.8125rem;padding:11px 13px}.scope strong{display:block;margin-bottom:3px}.workgrid{grid-template-columns:1fr;gap:16px}.panel{padding:18px}.source-card{margin-top:12px}.section-head{gap:9px}h2{font-size:1.025rem}.port-row{padding:11px;gap:7px;grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr)}.port-id{font-size:.8125rem;gap:6px}.port-row select{font-size:.8125rem;padding:6px}.port-context{font-size:.6875rem}.port-heading{padding:10px}.preview .section-head button{margin:8px 0 0;width:100%}.stats{gap:20px;padding:15px}.stat b{font-size:1.4rem}.footnotes{grid-template-columns:1fr;gap:12px;margin-top:22px}footer{display:block}footer span{display:block;margin-top:6px}}
+/* Preserve reflow when users enlarge text, including narrow viewports. */
+header{flex-wrap:wrap}.brand,.head-right{min-width:0}.instances-head{flex-wrap:wrap}.port-id{flex-wrap:wrap}.port-heading>*{min-width:0;overflow-wrap:anywhere}.section-head>*{min-width:0}.intro-actions button{overflow-wrap:anywhere}.reviewbar button{white-space:normal}
+</style></head><body><a href="#workspace" class="skip" data-i18n="skip">作業エリアへ</a><header><div class="brand"><span class="mark" aria-hidden="true">⇄</span><span>PortRewire<span class="brand-sub">PURE DATA / CONTROL PORTS</span></span></div><div class="head-right"><span class="offline" data-i18n="offline">ローカル処理 · 通信なし</span><button id="language" class="small">English</button></div></header><main id="workspace"><section class="intro"><div><p class="eyebrow" data-i18n="eyebrow">ABSTRACTION MIGRATION WORKBENCH</p><h1 data-i18n="title">ポートの順番を変えても、<br>つながりはそのまま。</h1><p class="lede" data-i18n="lede">新旧の .pd と呼び出し元を比較。対応を決め、接続番号だけを書き換えます。</p></div><div class="intro-actions"><button id="demo" class="primary" data-i18n="demo">動作例を読み込む</button><button id="reset" class="quiet" data-i18n="reset">すべてリセット</button></div></section><div class="scope"><strong data-i18n="scopeTag">v1 の対象</strong><span data-i18n="scope">同数の制御ポートの並べ替えのみ。音声ポート・追加/削除・型変換は対象外です。</span></div><div id="status" role="status" aria-live="polite" data-kind="idle"></div><div class="workgrid"><section class="panel sources"><div class="section-head"><span class="step">01</span><h2 data-i18n="sources">ソースを選ぶ</h2></div><p class="hint" data-i18n="sourceHint">アップロードしたパッチは実行されません。</p><div class="source-card"><label for="oldFile"><span class="chip old" data-i18n="old">旧バージョン</span><strong data-i18n="oldLabel">変更前の抽象化</strong></label><input type="file" id="oldFile" accept=".pd"><p class="file-summary" id="oldSummary"></p></div><div class="source-card"><label for="newFile"><span class="chip revised" data-i18n="revised">新バージョン</span><strong data-i18n="newLabel">変更後の抽象化</strong></label><input type="file" id="newFile" accept=".pd"><p class="file-summary" id="newSummary"></p></div><div class="source-card"><label for="callerFiles"><span class="chip callers" data-i18n="callers">呼び出し元</span><strong data-i18n="callerLabel">呼び出し元・補助パッチ</strong></label><input type="file" id="callerFiles" accept=".pd" multiple><p class="file-summary" id="callerSummary"></p><p class="hint" data-i18n="limits">各512 KiBまで・20ファイルまで・合計4 MiBまで。必要な補助 .pd も含めてください。</p></div><details class="contract"><summary data-i18n="savedContract">保存済みの対応を再利用</summary><p class="hint" data-i18n="contractHint">migration.json を読み込みます。元のソースのハッシュが一致する場合のみ適用できます。</p><label for="planFile" data-i18n="planLabel">移行契約ファイル</label><input type="file" id="planFile" accept=".json"><button id="newMapping" class="small" data-i18n="newMapping">新しい対応を作成</button><p id="contractState" class="hint"></p></details></section><section class="panel mapping"><div class="section-head"><span class="step">02</span><h2 data-i18n="mapping">ポートの対応を決める</h2><span class="badge" data-i18n="explicit">明示的な1対1対応</span></div><p class="hint" data-i18n="mappingHint">左右の位置から番号を表示します。コメントは参考情報で、意味の一致は保証しません。</p><div id="portMaps" class="port-maps"></div><div class="instances-head"><h3 data-i18n="instances">適用するインスタンス</h3><span id="instanceCount" class="badge"></span></div><p class="hint" data-i18n="instanceHint">完全一致するオブジェクト名のみ。入れ子のキャンバスも個別に選べます。</p><div id="instances"></div><div class="reviewbar"><p class="hint" data-i18n="reviewHint">入力・対応・選択を変えると、プレビューは無効になります。</p><button id="review" class="primary" data-i18n="review">変更をプレビュー</button></div></section></div><section class="panel preview"><div class="section-head"><span class="step">03</span><h2 data-i18n="preview">変更を確認して書き出す</h2><button id="export" class="primary" disabled data-i18n="export">移行ZIPを保存</button></div><div id="emptyPreview" class="empty"><span aria-hidden="true">#X connect</span><p data-i18n="emptyPreview">対応を選んでプレビューすると、変更する接続番号がここに表示されます。</p></div><div id="result" hidden></div></section><section class="footnotes"><div><h3 data-i18n="preserves">守るもの</h3><p data-i18n="preservesText">接続行の順番、オブジェクト番号、座標、コメント、空白、改行。選択した接続のポート番号以外は元のバイト列を保ちます。</p></div><div><h3 data-i18n="verify">最後は自分のパッチで検証</h3><p data-i18n="verifyText">ハッシュは元のソースとの一致を確認します。意味や動作の同等性は判定しません。元ファイルを保存し、別フォルダで確認してください。</p></div></section><footer><span>PortRewire / v0.1</span><span data-i18n="footer">通信・保存・パッチ実行なし。ページを閉じると入力は消去されます。</span></footer></main><script type="module">/* PortRewire: own-source bounded Pd text parser. Never executes patch contents. */
+const LIMITS = Object.freeze({fileBytes: 524288, totalBytes: 4194304, callers: 20, records: 20000, depth: 32, ports: 64, instances: 512, connections: 5000});
+const enc = new TextEncoder();
+class RewireError extends Error { constructor(code, detail='') { super(detail || code); this.name='RewireError'; this.code=code; } }
+const fail = (code, detail) => { throw new RewireError(code, detail); };
+function textFromBytes(bytes) {
+  if (bytes.byteLength > LIMITS.fileBytes) fail('LIMIT', 'File exceeds 512 KiB');
+  try { return new TextDecoder('utf-8', {fatal:true, ignoreBOM:true}).decode(bytes); } catch { fail('ENCODING','Use valid UTF-8 Pd files'); }
+}
+function validText(text) {
+  if (typeof text !== 'string' || enc.encode(text).length > LIMITS.fileBytes) fail('LIMIT','File exceeds 512 KiB');
+  if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f\uFEFF]/u.test(text) || /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/u.test(text)) fail('ENCODING','Unsupported control or invalid Unicode');
+  return text;
+}
+async function sha256(text) { return [...new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',enc.encode(text)))].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+function atoms(text,start,end) {
+  const out=[]; let i=start;
+  while(i<end) {
+    while(i<end && /[ \t\r\n]/.test(text[i])) i++;
+    if(i>=end) break;
+    const a=i; let value='', escaped=false;
+    if(text[i]===',') { out.push({raw:',',value:',',start:i,end:++i}); continue; }
+    while(i<end && !/[ \t\r\n]/.test(text[i]) && text[i]!==',') {
+      if(text[i]==='\\') { if(i+1>=end) fail('RECORD','Dangling escape'); escaped=true; value+=text[i+1]; i+=2; }
+      else value+=text[i++];
+    }
+    const raw=text.slice(a,i);
+    if(enc.encode(raw).length>=1000) fail('ATOM','Atoms must be shorter than 1000 UTF-8 bytes');
+    out.push({raw,value,start:a,end:i,escaped});
+  }
+  return out;
+}
+function records(text) {
+  const result=[]; let start=0, escape=false;
+  for(let i=0;i<text.length;i++) {
+    if(escape) {escape=false; continue;}
+    if(text[i]==='\\') {escape=true;continue;}
+    if(text[i]===';') {
+      const tokens=atoms(text,start,i); if(!tokens.length) fail('RECORD','Empty record');
+      result.push({start,end:i+1,tokens,number:result.length+1}); start=i+1;
+      if(result.length>LIMITS.records) fail('LIMIT','Too many records');
+    }
+  }
+  if(/[^ \t\r\n]/.test(text.slice(start))) fail('RECORD','Unterminated record');
+  if(!result.length) fail('RECORD','Empty patch'); return result;
+}
+const int = (t, max=1000000, signed=false) => {
+  if(!t || t.escaped || !(signed?/^-?\d+$/:/^\d+$/).test(t.raw) || !Number.isSafeInteger(Number(t.raw)) || Math.abs(Number(t.raw))>max) fail('INDEX','Invalid integer');
+  return Number(t.raw);
+};
+function coordinate(t) {
+  if(!t||t.escaped||! /^-?\d+$/.test(t.raw)||!Number.isInteger(Number(t.raw))||Number(t.raw)<-32768||Number(t.raw)>32767) fail('COORDINATE','Graphical coordinates must fit signed 16-bit pixels');
+  return Number(t.raw);
+}
+function contentTokens(t) { // Pd's optional ", f N" is presentation metadata, not an argument.
+  const comma=t.findIndex(a=>a.raw===',');
+  if(comma===-1) return t;
+  if(comma!==t.length-3 || t[comma+1].raw!=='f') fail('RECORD','Unsupported object metadata');
+  int(t[comma+2],10000); return t.slice(0,comma);
+}
+function parsePatch(text) {
+  validText(text); const list=records(text), canvases=[], stack=[]; let root;
+  for(const r of list) {
+    const t=r.tokens, v=t.map(a=>a.value), lead=v[0], kind=v[1];
+    if(t[0].escaped || t[1]?.escaped) fail('RECORD','Escaped record selectors are unsupported');
+    if(lead==='#N' && kind==='canvas') {
+      if((!root && t.length!==7) || (root && t.length!==8)) fail('CANVAS','Unsupported canvas header');
+      for(let i=2;i<=5;i++) int(t[i],1000000,true);
+      if(root) int(t[7],1); else int(t[6],100);
+      const parent=stack.at(-1);
+      if(root && !parent) fail('CANVAS','Multiple root canvases');
+      if(stack.length>=LIMITS.depth) fail('LIMIT','Canvas nesting too deep');
+      const c={id:parent?`${parent.id}/${parent.objects.length}`:'root',label:parent?v[6]:'root',objects:[],connections:[],record:r,parent:parent?.id ?? null};
+      canvases.push(c);stack.push(c);root??=c;continue;
+    }
+    const c=stack.at(-1); if(!c || lead!=='#X') fail('RECORD',`Unsupported record ${lead} ${kind}`);
+    if(kind==='restore') {
+      const q=contentTokens(t);
+      if(stack.length<2 || q.length!==6 || q[4].raw!=='pd' || q[5].value!==c.label) fail('CANVAS','Malformed canvas restore');
+      coordinate(q[2]); coordinate(q[3]);
+      stack.pop(); const parent=stack.at(-1);
+      parent.objects.push({kind:'restore',index:parent.objects.length,record:r,child:c.id,connectable:true,x:Number(q[2].raw),y:Number(q[3].raw)});continue;
+    }
+    if(kind==='connect') {
+      if(t.length!==6) fail('RECORD','Malformed connection');
+      const [source,outlet,target,inlet]=t.slice(2).map(a=>int(a,65535));
+      if(!c.objects[source]?.connectable||!c.objects[target]?.connectable) fail('INDEX','Connection endpoints must already exist in the current canvas');
+      c.connections.push({record:r,source,outlet,target,inlet});continue;
+    }
+    if(kind==='coords') {
+      if(t.length<9 || t.length>11 || t.slice(2).some(a=>a.escaped || !/^-?\d+(?:\.\d+)?$/.test(a.raw) || !Number.isFinite(Number(a.raw)))) fail('RECORD','Unsupported coords');
+      continue;
+    }
+    if(kind==='f') { if(t.length!==3 || !c.objects.length) fail('RECORD','Malformed width'); int(t[2],10000); continue; }
+    if(!['obj','msg','text','floatatom','symbolatom','listbox'].includes(kind)) fail('RECORD',`Unsupported #X ${kind}`);
+    if(t.length<4) fail('RECORD','Object missing coordinates');
+    const x=coordinate(t[2]), y=coordinate(t[3]);
+    const q=contentTokens(t);
+    if(kind==='obj' && q.length<5) fail('RECORD','Object missing class');
+    if(['floatatom','symbolatom','listbox'].includes(kind) && (q.length<11 || q.length>13)) fail('RECORD','Unsupported atom box');
+    const cls=kind==='obj'?q[4].value:null;
+    if(kind==='obj'&&(q[4].escaped||q[4].raw.includes('$'))) fail('UNSUPPORTED','Escaped or parameterized object classes are unsupported');
+    if(cls==='clone' || cls==='declare') fail('UNSUPPORTED',`${cls} is outside the supported subset`);
+    if(kind==='msg' && q.some(a=>/^pd(?:-|$)/.test(a.value)) && q.some(a=>a.raw==='\\;')) fail('UNSUPPORTED','Dynamic canvas messages are unsupported');
+    if(['s','send','r','receive'].includes(cls) && q.slice(5).some(a=>/^pd(?:-|$)/.test(a.value))) fail('UNSUPPORTED','Dynamic canvas messaging is unsupported');
+    c.objects.push({kind,index:c.objects.length,record:r,x,y,className:cls,classRaw:kind==='obj'?q[4].raw:null,args:q.slice(5).map(a=>a.value),connectable:kind!=='text'});
+  }
+  if(stack.length!==1) fail('CANVAS','Unclosed nested canvas');
+  for(const c of canvases) for(const edge of c.connections) {
+    const source=c.objects[edge.source],target=c.objects[edge.target];
+    if(!source || !target || !source.connectable || !target.connectable) fail('INDEX',`Invalid object index in ${c.id}`);
+  }
+  return {text,canvases,root,records:list};
+}
+function inspectPorts(text) {
+  const p=parsePatch(text), inputs=[], outputs=[];
+  for(const o of p.root.objects) {
+    if(o.className==='inlet~'||o.className==='outlet~') fail('SIGNAL','Signal ports are unsupported');
+    if(o.className==='inlet'||o.className==='outlet') {
+      if(o.args.length) fail('PORT','Only argument-free ordinary control ports are supported');
+      const context=p.root.objects.filter(c=>c.kind==='text' && Math.abs(c.x-o.x)<=90 && Math.abs(c.y-o.y)<=55).map(c=>c.record.tokens.slice(4).map(a=>a.value).join(' ')).slice(0,3);
+      (o.className==='inlet'?inputs:outputs).push({x:o.x,y:o.y,objectIndex:o.index,context});
+    }
+  }
+  for(const ports of [inputs,outputs]) {
+    if(ports.length>LIMITS.ports) fail('LIMIT','At most 64 ports per direction');
+    ports.sort((a,b)=>a.x-b.x);
+    if(ports.some((p,i)=>i && p.x===ports[i-1].x)) fail('AMBIGUOUS','Equal-X ports have ambiguous ordering');
+    ports.forEach((p,index)=>p.index=index);
+  }
+  if(!inputs.length && !outputs.length) fail('PORT','No ordinary control ports');
+  return {inputs,outputs};
+}
+function validateMap(map,n,label='ports') {
+  if(!Array.isArray(map)||map.length!==n||new Set(map).size!==n||Array.from(map).some(v=>!Number.isInteger(v)||v<0||v>=n)) fail('MAP',`Provide a complete bijection for ${label}`);
+  return map;
+}
+function filename(name) {
+  if(typeof name!=='string'||!/^[A-Za-z0-9_][A-Za-z0-9_.-]{0,99}\.pd$/.test(name)||/\.\.|\.$/.test(name)||/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])\./i.test(name)) fail('FILENAME','Use a plain safe .pd filename');
+  return name;
+}
+function abstractionName(name) {
+  filename(name); const stem=name.slice(0,-3);
+  if(!/^[A-Za-z_][A-Za-z0-9_-]{0,63}$/.test(stem)) fail('FILENAME','Use an unqualified abstraction name');
+  return stem;
+}
+function listInstances(text,name) {
+  const patch=parsePatch(text);
+  return patch.canvases.flatMap(c=>c.objects.filter(o=>o.kind==='obj'&&o.classRaw===name).map(o=>({canvas:c.id,canvasLabel:c.label,index:o.index,x:o.x,y:o.y,args:o.args})));
+}
+const instanceKey = (file,instance) => `${file}::${instance.canvas}::${instance.index}`;
+function sourceCheck(oldModule,newModule,callers) {
+  filename(oldModule?.name);filename(newModule?.name); const name=abstractionName(oldModule.name);
+  if(!Array.isArray(callers)||!callers.length||callers.length>LIMITS.callers) fail('LIMIT','Choose 1–20 caller files');
+  const names=new Set([oldModule.name.toLowerCase()]); let size=enc.encode(validText(oldModule.text)).length+enc.encode(validText(newModule.text)).length;
+  for(const file of callers) { filename(file?.name); if(names.has(file.name.toLowerCase())) fail('FILENAME','Output filenames collide'); names.add(file.name.toLowerCase());size+=enc.encode(validText(file.text)).length; }
+  if(size>LIMITS.totalBytes) fail('LIMIT','Bundle exceeds 4 MiB');
+  if(callers.reduce((n,f)=>n+listInstances(f.text,name).length,0)>LIMITS.instances) fail('LIMIT','At most 512 matching instances per bundle');
+  if(callers.reduce((n,f)=>n+parsePatch(f.text).canvases.reduce((m,c)=>m+c.connections.length,0),0)>LIMITS.connections) fail('LIMIT','At most 5000 connections per bundle');
+  const oldPorts=inspectPorts(oldModule.text),newPorts=inspectPorts(newModule.text);
+  if(oldPorts.inputs.length!==newPorts.inputs.length||oldPorts.outputs.length!==newPorts.outputs.length) fail('COUNT','Port counts must stay equal');
+  return {name,oldPorts,newPorts};
+}
+async function createPlan({oldModule,newModule,callers,inputMap,outputMap,selected}) {
+  const {name,oldPorts,newPorts}=sourceCheck(oldModule,newModule,callers);
+  validateMap(inputMap,oldPorts.inputs.length,'inputs');validateMap(outputMap,oldPorts.outputs.length,'outputs');
+  const available=callers.flatMap(file=>listInstances(file.text,name).map(i=>instanceKey(file.name,i)));
+  if(available.length>LIMITS.instances) fail('LIMIT','At most 512 matching instances per bundle');
+  const chosen=selected===undefined?available:selected;
+  if(!Array.isArray(chosen)||!chosen.length||new Set(chosen).size!==chosen.length||chosen.some(k=>!available.includes(k))) fail('SELECTION','Select valid exact-name instances');
+  const plan={schema:'port-rewire/migration-1',target:name,oldModule:{name:oldModule.name,sha256:await sha256(oldModule.text)},newModule:{name:oldModule.name,sha256:await sha256(newModule.text)},inputMap:[...inputMap],outputMap:[...outputMap],callers:[]};
+  for(const file of callers) plan.callers.push({name:file.name,sha256:await sha256(file.text),instances:listInstances(file.text,name).filter(i=>chosen.includes(instanceKey(file.name,i))).map(({canvas,index})=>({canvas,index}))});
+  return plan;
+}
+const isHash = v=>typeof v==='string'&&/^[0-9a-f]{64}$/.test(v);
+const recordObject = v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
+function validateContractShape(plan) {
+  if(!recordObject(plan)||!recordObject(plan.oldModule)||!recordObject(plan.newModule)||!Array.isArray(plan.callers)) fail('PLAN','Malformed migration contract');
+  for(const caller of plan.callers) {
+    if(!recordObject(caller)||typeof caller.name!=='string'||!isHash(caller.sha256)||!Array.isArray(caller.instances)) fail('PLAN','Malformed caller contract');
+    for(const instance of caller.instances) {
+      if(!recordObject(instance)||typeof instance.canvas!=='string'||!/^root(?:\/(?:0|[1-9]\d*))*$/.test(instance.canvas)||!Number.isSafeInteger(instance.index)||instance.index<0||instance.index>65535) fail('SELECTION','Invalid instance reference');
+    }
+  }
+}
+async function applyPlan({plan,oldModule,newModule,callers}) {
+  validateContractShape(plan);
+  const {name,oldPorts}=sourceCheck(oldModule,newModule,callers);
+  if(!plan||plan.schema!=='port-rewire/migration-1'||plan.target!==name||plan.oldModule?.name!==oldModule.name||plan.newModule?.name!==oldModule.name||!Array.isArray(plan.callers)||plan.callers.length!==callers.length) fail('PLAN','Incompatible migration plan');
+  if(!isHash(plan.oldModule.sha256)||!isHash(plan.newModule.sha256)||await sha256(oldModule.text)!==plan.oldModule.sha256||await sha256(newModule.text)!==plan.newModule.sha256) fail('HASH','Abstraction source hash does not match');
+  validateMap(plan.inputMap,oldPorts.inputs.length,'inputs');validateMap(plan.outputMap,oldPorts.outputs.length,'outputs');
+  const planNames=new Set(plan.callers.map(c=>c.name)); if(planNames.size!==callers.length) fail('PLAN','Duplicate caller plan');
+  const files=[],changes=[]; let selectedCount=0;
+  for(const file of callers) {
+    const bound=plan.callers.find(c=>c.name===file.name);
+    if(!bound||!isHash(bound.sha256)||await sha256(file.text)!==bound.sha256) fail('HASH',`Changed or already-migrated caller: ${file.name}`);
+    if(!Array.isArray(bound.instances)) fail('SELECTION','Invalid selection');
+    const available=listInstances(file.text,name),keys=bound.instances.map(i=>instanceKey(file.name,i));
+    if(new Set(keys).size!==keys.length||keys.some(k=>!available.some(i=>instanceKey(file.name,i)===k))) fail('SELECTION','Selected instance no longer exists');
+    selectedCount+=keys.length;
+    const patch=parsePatch(file.text),edits=[];
+    for(const canvas of patch.canvases) {
+      const selected=new Set(bound.instances.filter(i=>i.canvas===canvas.id).map(i=>i.index));
+      for(const edge of canvas.connections) {
+        const before=[edge.source,edge.outlet,edge.target,edge.inlet],after=[...before];
+        if(selected.has(edge.source)) { if(edge.outlet>=plan.outputMap.length) fail('INDEX','Selected outlet is out of range');after[1]=plan.outputMap[edge.outlet]; }
+        if(selected.has(edge.target)) { if(edge.inlet>=plan.inputMap.length) fail('INDEX','Selected inlet is out of range');after[3]=plan.inputMap[edge.inlet]; }
+        for(const i of [1,3]) if(before[i]!==after[i]) { const atom=edge.record.tokens[i+2]; edits.push({start:atom.start,end:atom.end,value:String(after[i])}); }
+        if(before.some((v,i)=>v!==after[i])) changes.push({file:file.name,canvas:canvas.id,record:edge.record.number,before,after});
+      }
+    }
+    let output=file.text;for(const edit of edits.sort((a,b)=>b.start-a.start)) output=output.slice(0,edit.start)+edit.value+output.slice(edit.end);
+    files.push({name:file.name,text:output,beforeSha256:bound.sha256,afterSha256:await sha256(output),changedTokens:edits.length});
+  }
+  if(!selectedCount) fail('SELECTION','No selected instances');
+  const contractId=await sha256(JSON.stringify(plan));
+  const receipt={schema:'port-rewire/receipt-1',contractId,target:name,selectedInstances:selectedCount,changedConnections:changes.length,changedTokens:files.reduce((n,f)=>n+f.changedTokens,0),files:files.map(({text,...f})=>f),changes,limits:'Control-port wiring permutation only. No behavioral-equivalence guarantee. Imported patches were not executed.'};
+  return {files:[{name:oldModule.name,text:newModule.text},...files],plan,receipt,changes};
+}
+function receiptText(result) {
+  const r=result.receipt;
+  return `PortRewire migration receipt\nContract SHA-256: ${r.contractId}\nAbstraction: ${r.target}.pd\nSelected instances: ${r.selectedInstances}\nChanged connections: ${r.changedConnections}\nChanged endpoint tokens: ${r.changedTokens}\n\n${r.files.map(f=>`${f.name}\n  before: ${f.beforeSha256}\n  after:  ${f.afterSha256}\n  changed tokens: ${f.changedTokens}`).join('\n')}\n\n${r.changes.map(c=>`${c.file} / ${c.canvas} / record ${c.record}: ${c.before.join(' ')} -> ${c.after.join(' ')}`).join('\n')}\n\nOnly selected inlet/outlet integer tokens were rewritten. Connection order, object indices, and all other caller bytes were preserved.\nPort counts and plain control-port syntax were checked; port meaning and arbitrary behavior were not.\nKeep your originals. Load the bundle into a separate folder and verify it in your own Pd project before replacing production files.\nThe app does not execute imported patches. Native evidence uses only synthetic fixtures.\n`;
+}
+
+/* ZIP store writer: own-source, UTF-8 names, no compression/runtime dependency. */
+const table=Array.from({length:256},(_,n)=>{for(let k=0;k<8;k++)n=(n&1)?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
+function crc32(bytes){let n=0xffffffff;for(const b of bytes)n=table[(n^b)&255]^(n>>>8);return(n^0xffffffff)>>>0;}
+function zipFiles(files){
+ const enc=new TextEncoder(),parts=[],central=[];let offset=0;
+ for(const file of files){
+  if(!/^[A-Za-z0-9_][A-Za-z0-9_.-]{0,119}$/.test(file.name)||file.name.includes('..'))throw Error('Unsafe archive filename');
+  const name=enc.encode(file.name),data=enc.encode(file.text),crc=crc32(data),local=new Uint8Array(30+name.length),v=new DataView(local.buffer);
+  v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint16(12,33,true);v.setUint32(14,crc,true);v.setUint32(18,data.length,true);v.setUint32(22,data.length,true);v.setUint16(26,name.length,true);local.set(name,30);
+  const c=new Uint8Array(46+name.length),d=new DataView(c.buffer);d.setUint32(0,0x02014b50,true);d.setUint16(4,20,true);d.setUint16(6,20,true);d.setUint16(8,0x800,true);d.setUint16(14,33,true);d.setUint32(16,crc,true);d.setUint32(20,data.length,true);d.setUint32(24,data.length,true);d.setUint16(28,name.length,true);d.setUint32(42,offset,true);c.set(name,46);
+  parts.push(local,data);central.push(c);offset+=local.length+data.length;
+ }
+ const size=central.reduce((n,b)=>n+b.length,0),end=new Uint8Array(22),e=new DataView(end.buffer);e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,size,true);e.setUint32(16,offset,true);
+ const result=new Uint8Array(offset+size+22);let at=0;for(const p of [...parts,...central,end]){result.set(p,at);at+=p.length;}return result;
+}
+
+const DEMO = {"oldModule":{"name":"triplet.pd","text":"#N canvas 0 0 520 340 10;\n#X text 20 20 Own-authored triplet: result=value*gain+bias and echo=value;\n#X obj 60 70 inlet;\n#X obj 180 70 inlet;\n#X obj 300 70 inlet;\n#X obj 60 120 t f f;\n#X obj 150 170 *;\n#X obj 150 210 +;\n#X obj 60 270 outlet;\n#X obj 300 270 outlet;\n#X connect 1 0 4 0;\n#X connect 2 0 5 1;\n#X connect 3 0 6 1;\n#X connect 4 1 5 0;\n#X connect 5 0 6 0;\n#X connect 6 0 7 0;\n#X connect 4 0 8 0;\n"},"newModule":{"name":"triplet.pd","text":"#N canvas 0 0 520 340 10;\n#X text 20 20 Own-authored triplet: result=value*gain+bias and echo=value;\n#X obj 300 70 inlet;\n#X obj 60 70 inlet;\n#X obj 180 70 inlet;\n#X obj 60 120 t f f;\n#X obj 150 170 *;\n#X obj 150 210 +;\n#X obj 300 270 outlet;\n#X obj 60 270 outlet;\n#X connect 1 0 4 0;\n#X connect 2 0 5 1;\n#X connect 3 0 6 1;\n#X connect 4 1 5 0;\n#X connect 5 0 6 0;\n#X connect 6 0 7 0;\n#X connect 4 0 8 0;\n"},"callers":[{"name":"caller-a.pd","text":"#N canvas 0 0 600 480 10;\n#X text 20 20 triplet mentioned in a comment \\, keep this \\; inert text;\n#X obj 40 60 inlet;\n#X obj 40 100 t b b b b;\n#X msg 250 150 2;\n#X msg 180 150 1;\n#X msg 110 150 3;\n#X msg 40 150 4;\n#X obj 110 210 triplet;\n#X obj 20 270 print A_RESULT;\n#X obj 170 310 print A_FAN_SECOND;\n#X obj 170 270 print A_FAN_FIRST;\n#X obj 340 270 print A_ECHO;\n#X msg 20 370 triplet \\, unchanged \\; nowhere still-inert;\n#X obj 320 370 triplet-extra;\n#X text 20 410 triplet-extra and triplet are deliberately different names;\n#X connect 1 0 2 0;\n#X connect 2 3 3 0;\n#X connect 2 2 4 0;\n#X connect 2 1 5 0;\n#X connect 2 0 6 0;\n#X connect 3 0 7 1;\n#X connect 4 0 7 2;\n#X connect 5 0 7 0;\n#X connect 6 0 7 0;\n#X connect 7 0 8 0;\n#X connect 7 0 10 0;\n#X connect 7 0 9 0;\n#X connect 7 1 11 0;\n"},{"name":"caller-b.pd","text":"#N canvas 0 0 640 560 10;\r\n#X text 20 20 Outer comment before the inlet and nested subpatch;\r\n#X obj 40 70 inlet;\r\n#N canvas 0 0 600 480 nested 0;\r\n#X text 20 20 triplet mentioned in a comment \\, keep this \\; inert text;\r\n#X obj 40 60 inlet;\r\n#X obj 40 100 t b b b b;\r\n#X msg 250 150 3;\r\n#X msg 180 150 -1;\r\n#X msg 110 150 2;\r\n#X msg 40 150 5;\r\n#X obj 110 210 triplet;\r\n#X obj 20 270 print B_RESULT;\r\n#X obj 170 310 print B_FAN_SECOND;\r\n#X obj 170 270 print B_FAN_FIRST;\r\n#X obj 340 270 print B_ECHO;\r\n#X msg 20 370 triplet \\, unchanged \\; nowhere still-inert;\r\n#X obj 320 370 triplet-extra;\r\n#X text 20 410 triplet-extra and triplet are deliberately different names;\r\n#X connect 1 0 2 0;\r\n#X connect 2 3 3 0;\r\n#X connect 2 2 4 0;\r\n#X connect 2 1 5 0;\r\n#X connect 2 0 6 0;\r\n#X connect 3 0 7 1;\r\n#X connect 4 0 7 2;\r\n#X connect 5 0 7 0;\r\n#X connect 6 0 7 0;\r\n#X connect 7 0 8 0;\r\n#X connect 7 0 10 0;\r\n#X connect 7 0 9 0;\r\n#X connect 7 1 11 0;\r\n#X restore 40 120 pd nested;\r\n#X text 20 180 An outer triplet mention must stay untouched;\r\n#X connect 1 0 2 0;\r\n"},{"name":"triplet-extra.pd","text":"#N canvas 0 0 240 200 10;\n#X text 20 20 Own-authored unrelated pass-through abstraction;\n#X obj 40 70 inlet;\n#X obj 40 130 outlet;\n#X connect 1 0 2 0;\n"}],"inputMap":[2,0,1],"outputMap":[1,0]};
+
+const $=id=>document.getElementById(id);
+const dict={
+ja:{skip:'作業エリアへ',offline:'ローカル処理 · 通信なし',eyebrow:'PURE DATA / ポート移行ワークベンチ',title:'ポートの順番を変えても、\nつながりはそのまま。',lede:'新旧の .pd と呼び出し元を比較。対応を決め、接続番号だけを書き換えます。',demo:'動作例を読み込む',reset:'すべてリセット',scopeTag:'v1 の対象',scope:'同数の制御ポートの並べ替えのみ。音声ポート・追加/削除・型変換は対象外です。',sources:'ソースを選ぶ',sourceHint:'読み込んだパッチは実行されません。',old:'旧バージョン',revised:'新バージョン',callers:'呼び出し元',oldLabel:'変更前の抽象化',newLabel:'変更後の抽象化',callerLabel:'呼び出し元・補助パッチ',limits:'各512 KiBまで・20ファイルまで・合計4 MiBまで。必要な補助 .pd も含めてください。',savedContract:'保存済みの対応を再利用',contractHint:'migration.json を読み込みます。元のソースのハッシュが一致する場合のみ適用できます。',planLabel:'移行契約ファイル',newMapping:'新しい対応を作成',mapping:'ポートの対応を決める',explicit:'明示的な1対1対応',mappingHint:'左右の位置から番号を表示します。コメントは参考情報で、意味の一致は保証しません。',instances:'適用するインスタンス',instanceHint:'完全一致するオブジェクト名のみ。入れ子のキャンバスも個別に選べます。',reviewHint:'入力・対応・選択を変えると、プレビューは無効になります。',review:'変更をプレビュー',preview:'変更を確認して書き出す',export:'移行ZIPを保存',emptyPreview:'対応を選んでプレビューすると、変更する接続番号がここに表示されます。',preserves:'守るもの',preservesText:'接続行の順番、オブジェクト番号、座標、コメント、空白、改行。選択した接続のポート番号以外は元のバイト列を保ちます。',verify:'最後は自分のパッチで検証',verifyText:'ハッシュは元のソースとの一致を確認します。意味や動作の同等性は判定しません。元ファイルを保存し、別フォルダで確認してください。',footer:'通信・自動保存・パッチ実行なし。ページを閉じると入力は消去されます。',emptyFile:'未選択',files:'ファイル',inputs:'入力 / inlet',outputs:'出力 / outlet',ordered:'旧番号 → 新番号（左から）',choose:'新しい番号を選択',object:'オブジェクト',context:'周辺コメント（参考）',emptyPorts:'新旧の抽象化を読み込むと、ポートの対応を選べます。',emptyInstances:'抽象化と呼び出し元を読み込んでください。',noInstances:'完全一致するインスタンスがありません。',root:'ルート',canvas:'キャンバス',selected:'選択',contractActive:'保存済み契約を使用中。対応と選択は固定され、プレビュー時にソースハッシュを検証します。',contractOff:'新規の対応。書き出し時に元のソースハッシュへ紐づけます。',initial:'動作例を読み込み済みです。入力 [2, 0, 1]、出力 [1, 0] の対応を確認してプレビューしてください。',resetDone:'リセットしました。新旧の抽象化と呼び出し元を選んでください。',changed:'入力が変わりました。もう一度プレビューしてください。',loading:'ファイルを読み込み中…',reviewing:'ソースハッシュと接続を検証中…',ready:'プレビューができました。変更を確認して、移行ZIPを保存できます。',exported:'移行ZIPを作成しました。元ファイルを残し、別フォルダで検証してください。',loaded:'ファイルを読み込みました。ポートの対応と対象を確認してください。',planLoaded:'保存済み契約を読み込みました。プレビューで元のソースとの一致を確認してください。',newMapDone:'新規の対応に切り替えました。各ポートの新しい番号を選んでください。',connections:'変更する接続',tokens:'変更する番号',selectedInstances:'選択インスタンス',bundle:'ZIPに含まれるファイル',receiptHint:'migration.json に元ソースの SHA-256、receipt.json と receipt.txt に変更内容が入ります。',unchanged:'変更はありません。恒等対応では、呼び出し元のバイト列をそのまま保ちます。',sample:'動作例: 旧入力 value / gain / bias → 新入力 gain / bias / value。旧出力 result / echo → 新出力 echo / result。',COORDINATE:'オブジェクトの座標は整数で、−32768〜32767の範囲にしてください。',ATOM:'1つのトークンはUTF-8で1,000バイト未満にしてください。',ERROR:'検証できませんでした。入力と対応を確認してください。',LIMIT:'サイズまたはファイル数が上限を超えています。各512 KiB、20ファイル、合計4 MiB、各方向64ポート、512インスタンス、5,000接続以内にしてください。',ENCODING:'有効なUTF-8の .pd ファイルを選んでください。BOMや制御文字は対象外です。',RECORD:'未対応または壊れたPdレコードがあります。通常のオブジェクト・メッセージ・コメントと接続のみが対象です。',INDEX:'接続のオブジェクト番号または選択したポート番号が範囲外です。',CANVAS:'キャンバスの入れ子または復元レコードを解釈できません。',UNSUPPORTED:'clone・declare・動的キャンバス操作・エスケープ/変数を使うオブジェクトクラスは対象外です。',SIGNAL:'音声ポート（inlet~ / outlet~）は対象外です。',PORT:'引数のない制御ポート（inlet / outlet）のみ対応しています。',AMBIGUOUS:'同じX座標のポートがあり、順番が曖昧です。位置を明確にしてから読み込んでください。',MAP:'すべての旧ポートに、重複しない新しい番号を選んでください。',FILENAME:'安全な英数字の .pd ファイル名を使い、出力名の重複を避けてください。抽象化名はパスなしで指定してください。',COUNT:'新旧の入力数・出力数が一致しません。追加・削除は対象外です。',SELECTION:'完全一致する有効なインスタンスを1つ以上選んでください。',PLAN:'この移行契約は読み込んだファイルと互換性がありません。',HASH:'ソースハッシュが一致しません。変更済み・移行済みのファイルには保存済み契約を適用できません。',JSON:'有効な migration.json を選んでください。',SOURCE:'新旧の抽象化と呼び出し元を選んでください。'},
+en:{skip:'Skip to workspace',offline:'Local processing · No network',eyebrow:'PURE DATA / PORT MIGRATION WORKBENCH',title:'Reorder the ports.\nKeep the connections.',lede:'Compare the old and revised .pd files, map the ports, and repair caller connections with exact-token edits.',demo:'Load worked example',reset:'Reset everything',scopeTag:'V1 SCOPE',scope:'Equal-count control-port permutations only. Signal ports, added/removed ports and type conversions are out of scope.',sources:'Choose source files',sourceHint:'Imported patches are never executed.',old:'OLD',revised:'REVISED',callers:'CALLERS',oldLabel:'Original abstraction',newLabel:'Revised abstraction',callerLabel:'Caller & support patches',limits:'512 KiB per file · up to 20 caller files · 4 MiB total. Include required support .pd files.',savedContract:'Reuse a saved mapping',contractHint:'Import migration.json. It applies only when the original source hashes match.',planLabel:'Migration contract file',newMapping:'Create a new mapping',mapping:'Map the ports',explicit:'Explicit one-to-one mapping',mappingHint:'Indices follow left-to-right position. Nearby comments are context only, never proof of port meaning.',instances:'Choose target instances',instanceHint:'Exact object-name matches only. Select nested-canvas instances individually.',reviewHint:'Changing sources, mappings or selection clears the preview.',review:'Preview changes',preview:'Review & export',export:'Save migration ZIP',emptyPreview:'Map the ports and preview to see every connection endpoint that will change.',preserves:'What stays intact',preservesText:'Connection order, object indices, coordinates, comments, whitespace and line endings. Every caller byte outside the selected endpoint numbers stays untouched.',verify:'Verify in your own patch',verifyText:'Hashes verify the source version, not semantic or behavioral equivalence. Keep your originals and test the bundle in a separate folder.',footer:'No network, autosave or patch execution. Closing the page clears your inputs.',emptyFile:'No source loaded',files:'files',inputs:'Inputs / inlet',outputs:'Outputs / outlet',ordered:'Old → revised (left-to-right)',choose:'Choose revised index',object:'object',context:'Nearby comment (context)',emptyPorts:'Load both abstraction versions to choose the port mapping.',emptyInstances:'Load an abstraction and caller files.',noInstances:'No exact-name instances found.',root:'root',canvas:'canvas',selected:'selected',contractActive:'Saved contract active. Mappings and selections are locked; source hashes are checked at preview.',contractOff:'New mapping. Export binds it to the original source hashes.',initial:'Worked example loaded. Review input map [2, 0, 1] and output map [1, 0], then preview.',resetDone:'Reset. Choose the old abstraction, revised abstraction and caller files.',changed:'Inputs changed. Preview again before exporting.',loading:'Reading files…',reviewing:'Checking source hashes and connections…',ready:'Preview is ready. Review the changes, then save the migration ZIP.',exported:'Migration ZIP created. Keep your originals and verify in a separate folder.',loaded:'Files loaded. Review the port mappings and target instances.',planLoaded:'Saved contract loaded. Preview to check it against the original sources.',newMapDone:'New mapping started. Choose the revised index for every old port.',connections:'changed connections',tokens:'changed tokens',selectedInstances:'selected instances',bundle:'Files in the ZIP',receiptHint:'migration.json binds the original SHA-256 hashes. receipt.json and receipt.txt describe every change.',unchanged:'No edits. Identity mappings preserve caller bytes exactly.',sample:'Example: old inputs value / gain / bias → revised gain / bias / value. Old outputs result / echo → revised echo / result.',COORDINATE:'Graphical coordinates must be integers in the range −32768 to 32767.',ATOM:'Each atom must be shorter than 1,000 UTF-8 bytes.',ERROR:'Validation failed. Check the source files and mapping.',LIMIT:'File size or count limit exceeded. Use at most 512 KiB per file, 20 callers, 4 MiB total, 64 ports per direction, 512 instances and 5,000 connections.',ENCODING:'Use valid UTF-8 .pd files. BOM and control characters are unsupported.',RECORD:'Unsupported or malformed Pd record. Ordinary objects, messages, comments and connections are supported.',INDEX:'A connection object index or selected port index is out of range.',CANVAS:'Malformed or unsupported canvas nesting or restore record.',UNSUPPORTED:'clone, declare, dynamic canvas operations, and escaped or parameterized object classes are unsupported.',SIGNAL:'Signal ports (inlet~ / outlet~) are unsupported.',PORT:'Only argument-free ordinary control ports (inlet / outlet) are supported.',AMBIGUOUS:'Two ports share an X position. Make their order unambiguous before importing.',MAP:'Choose a unique revised index for every old port.',FILENAME:'Use safe plain .pd filenames, avoid output-name collisions, and use an unqualified abstraction name.',COUNT:'Old and revised port counts differ. Added or removed ports are unsupported.',SELECTION:'Select at least one valid exact-name instance.',PLAN:'This migration contract is incompatible with the loaded files.',HASH:'Source hash mismatch. A saved contract cannot apply to changed or already-migrated callers.',JSON:'Choose a valid migration.json file.',SOURCE:'Choose both abstraction versions and at least one caller.'}}
+let lang='ja',revision=0,reading=false,working=false,sourceValid=false,readSequence=0;
+const pendingReads=new Map();
+function startRead(key){const ticket=++readSequence;pendingReads.set(key,ticket);reading=true;return ticket;}
+function currentRead(key,ticket){return pendingReads.get(key)===ticket;}
+function endRead(key,ticket){if(currentRead(key,ticket))pendingReads.delete(key);reading=pendingReads.size>0;}
+function cancelReads(){pendingReads.clear();reading=false;}
+let state={oldModule:null,newModule:null,callers:[],inputMap:[],outputMap:[],selected:new Set(),savedPlan:null,sample:false,result:null};
+let status={key:'resetDone',kind:'idle'};
+const t=key=>dict[lang][key]??dict[lang].ERROR;
+function node(tag,text,className){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;}
+function setStatus(key,kind='idle'){status={key,kind};$('status').textContent=t(key);$('status').dataset.kind=kind;}
+function invalidate(){revision++;state.result=null;working=false;$('result').replaceChildren();$('result').hidden=true;$('emptyPreview').hidden=false;$('export').disabled=true;setStatus('changed');}
+function controls(){$('review').disabled=reading||working||!sourceValid;$('export').disabled=reading||working||!state.result;}
+function error(e){setStatus(e instanceof RewireError?e.code:'ERROR','error');controls();}
+function renderSources(){
+ $('oldSummary').textContent=state.oldModule?`${state.oldModule.name} · ${new TextEncoder().encode(state.oldModule.text).length} B`:t('emptyFile');
+ $('newSummary').textContent=state.newModule?`${state.newModule.name} · ${new TextEncoder().encode(state.newModule.text).length} B`:t('emptyFile');
+ $('callerSummary').textContent=state.callers.length?state.callers.map(f=>f.name).join(' · '):t('emptyFile');
+ $('contractState').textContent=t(state.savedPlan?'contractActive':'contractOff');
+}
+function renderMapping(){
+ const maps=$('portMaps'),instances=$('instances');maps.replaceChildren();instances.replaceChildren();sourceValid=false;
+ $('instanceCount').textContent='0';
+ if(!state.oldModule||!state.newModule){maps.append(node('div',t('emptyPorts'),'empty'));instances.append(node('p',t('emptyInstances'),'hint'));controls();return;}
+ try{
+  const a=inspectPorts(state.oldModule.text),b=inspectPorts(state.newModule.text);
+  if(a.inputs.length!==b.inputs.length||a.outputs.length!==b.outputs.length)throw new RewireError('COUNT');
+  for(const [kind,mapKey] of [['inputs','inputMap'],['outputs','outputMap']]){
+   const group=node('div',undefined,'port-group'),heading=node('div',undefined,'port-heading');heading.append(node('strong',`${t(kind)} · ${a[kind].length}`),node('span',t('ordered')));group.append(heading);
+   a[kind].forEach((p,index)=>{
+    const row=node('div',undefined,'port-row'),old=node('div'),label=node('label',undefined,'port-id');label.htmlFor=`${mapKey}-${index}`;label.append(node('b',String(index)),node('span',`x=${p.x} · #${p.objectIndex}`));old.append(label);
+    if(p.context.length){const context=node('div',p.context.join(' / '),'port-context');context.title=`${t('context')}: ${p.context.join(' / ')}`;old.append(context);}
+    const select=node('select');select.id=`${mapKey}-${index}`;select.dataset.map=mapKey;select.dataset.index=index;select.setAttribute('aria-label',`${t(kind)} ${index} ${t('choose')}`);select.append(new Option(t('choose'),''));
+    b[kind].forEach(port=>select.append(new Option(`${port.index} · x=${port.x} · #${port.objectIndex}`,String(port.index))));select.value=Number.isInteger(state[mapKey]?.[index])?String(state[mapKey][index]):'';select.disabled=!!state.savedPlan||reading;
+    select.addEventListener('change',()=>{invalidate();state[mapKey]=a[kind].map((_,i)=>i===index?(select.value===''?null:Number(select.value)):state[mapKey][i]);controls();});
+    row.append(old,node('span','→','port-arrow'),select);group.append(row);
+   });maps.append(group);
+  }
+  if(state.sample)maps.append(node('p',t('sample'),'hint'));
+  const name=state.oldModule.name.slice(0,-3);let count=0,total=0;
+  if(state.callers.reduce((n,f)=>n+listInstances(f.text,name).length,0)>LIMITS.instances)throw new RewireError('LIMIT');
+  for(const file of state.callers)for(const i of listInstances(file.text,name)){
+   total++;const key=instanceKey(file.name,i),label=node('label',undefined,'instance'),check=node('input');check.type='checkbox';check.dataset.instance=key;check.checked=state.selected.has(key);check.disabled=!!state.savedPlan||reading;if(check.checked)count++;
+   const text=node('span');text.append(node('strong',`${file.name} / ${name}`),node('small',`${t('canvas')} ${i.canvas} · ${t('object')} #${i.index} · x=${i.x}, y=${i.y}`));
+   check.addEventListener('change',()=>{invalidate();const s=new Set(state.selected);check.checked?s.add(key):s.delete(key);state.selected=s;$('instanceCount').textContent=`${s.size} / ${total} ${t('selected')}`;controls();});label.append(check,text);instances.append(label);
+  }
+  $('instanceCount').textContent=`${count} / ${total} ${t('selected')}`;
+  if(!total)instances.append(node('p',t(state.callers.length?'noInstances':'emptyInstances'),'hint'));
+  sourceValid=!!state.callers.length;
+ }catch(e){error(e);}controls();
+}
+function renderResult(){
+ const r=state.result;if(!r)return;const result=$('result');result.replaceChildren();result.hidden=false;$('emptyPreview').hidden=true;
+ const stats=node('div',undefined,'stats');for(const [value,key] of [[r.receipt.selectedInstances,'selectedInstances'],[r.receipt.changedConnections,'connections'],[r.receipt.changedTokens,'tokens']]){const s=node('div',undefined,'stat');s.append(node('b',String(value)),node('span',t(key)));stats.append(s);}result.append(stats);
+ const changes=node('div',undefined,'changes');for(const c of r.changes){const item=node('div',undefined,'change');item.append(node('div',`${c.file} · ${c.canvas} · #${c.record}`,'change-name'));const code=node('div',undefined,'change-code');code.append(node('span',c.before.join(' '),'before'),node('span','→'),node('span',c.after.join(' '),'after'));item.append(code);changes.append(item);}result.append(changes);
+ if(!r.changes.length)result.append(node('p',t('unchanged'),'hint'));
+ result.append(node('h3',t('bundle')),node('p',[...r.files.map(f=>f.name),'migration.json','receipt.json','receipt.txt'].join(' · '),'bundle-list'),node('p',t('receiptHint'),'hint'));
+}
+function render(){document.documentElement.lang=lang;document.title=`PortRewire · ${lang==='ja'?'Pd ポート移行':'Pd port migration'}`;document.querySelectorAll('[data-i18n]').forEach(n=>{const value=t(n.dataset.i18n);n.textContent=value;if(n.dataset.i18n==='title')n.style.whiteSpace='pre-line';});$('language').textContent=lang==='ja'?'English':'日本語';$('language').setAttribute('aria-label',lang==='ja'?'Switch to English':'日本語に切り替える');renderSources();renderMapping();renderResult();$('status').textContent=t(status.key);controls();}
+function selectAll(){const name=state.oldModule?.name.slice(0,-3);state.selected=new Set(state.callers.flatMap(f=>listInstances(f.text,name).map(i=>instanceKey(f.name,i))));}
+function loadDemo(){invalidate();cancelReads();state={...structuredClone(DEMO),selected:new Set(),savedPlan:null,sample:true,result:null};selectAll();for(const id of ['oldFile','newFile','callerFiles','planFile'])$(id).value='';setStatus('initial');render();}
+$('demo').addEventListener('click',loadDemo);
+$('reset').addEventListener('click',()=>{invalidate();cancelReads();state={oldModule:null,newModule:null,callers:[],inputMap:[],outputMap:[],selected:new Set(),savedPlan:null,sample:false,result:null};for(const id of ['oldFile','newFile','callerFiles','planFile'])$(id).value='';setStatus('resetDone');render();});
+$('language').addEventListener('click',()=>{lang=lang==='ja'?'en':'ja';render();});
+async function readPatch(file){if(file.size>LIMITS.fileBytes)throw new RewireError('LIMIT');return{name:file.name,text:textFromBytes(new Uint8Array(await file.arrayBuffer()))};}
+for(const [id,key] of [['oldFile','oldModule'],['newFile','newModule'],['callerFiles','callers']])$(id).addEventListener('change',async e=>{
+ const files=[...e.target.files];invalidate();const ticket=startRead(key);state.sample=false;state[key]=key==='callers'?[]:null;if(!state.savedPlan){state.inputMap=[];state.outputMap=[];state.selected=new Set();}renderSources();renderMapping();setStatus('loading');
+ try{if(!files.length)throw new RewireError('SOURCE');if(files.length>(key==='callers'?20:1))throw new RewireError('LIMIT');const imported=await Promise.all(files.map(readPatch));if(!currentRead(key,ticket))return;invalidate();state[key]=key==='callers'?imported:imported[0];if(state.savedPlan){state.inputMap=state.savedPlan.inputMap??[];state.outputMap=state.savedPlan.outputMap??[];state.selected=new Set((state.savedPlan.callers??[]).flatMap(f=>(f.instances??[]).map(i=>instanceKey(f.name,i))));}else if(state.oldModule)selectAll();endRead(key,ticket);setStatus(reading?'loading':'loaded');render();}catch(e){if(!currentRead(key,ticket))return;endRead(key,ticket);renderSources();renderMapping();error(e);}
+});
+$('planFile').addEventListener('change',async e=>{
+ const file=e.target.files[0];invalidate();const ticket=startRead('plan');state.savedPlan=null;state.inputMap=[];state.outputMap=[];state.selected=new Set();render();setStatus('loading');
+ try{if(!file||file.size>524288)throw new RewireError('LIMIT');const text=await file.text();if(!currentRead('plan',ticket))return;let plan;try{plan=JSON.parse(text);}catch{throw new RewireError('JSON');}if(plan?.schema!=='port-rewire/migration-1'||!Array.isArray(plan.callers)||!Array.isArray(plan.inputMap)||!Array.isArray(plan.outputMap)||plan.callers.some(f=>!f||typeof f.name!=='string'||!Array.isArray(f.instances)||f.instances.some(i=>!i||typeof i.canvas!=='string'||!Number.isInteger(i.index))))throw new RewireError('PLAN');invalidate();state.savedPlan=plan;state.inputMap=plan.inputMap;state.outputMap=plan.outputMap;state.selected=new Set(plan.callers.flatMap(f=>f.instances.map(i=>instanceKey(f.name,i))));endRead('plan',ticket);setStatus(reading?'loading':'planLoaded');render();}catch(e){if(!currentRead('plan',ticket))return;endRead('plan',ticket);render();error(e);}
+});
+$('newMapping').addEventListener('click',()=>{invalidate();pendingReads.delete('plan');reading=pendingReads.size>0;state.savedPlan=null;state.inputMap=[];state.outputMap=[];$('planFile').value='';try{selectAll();}catch(e){error(e);}setStatus(reading?'loading':'newMapDone');render();});
+$('review').addEventListener('click',async()=>{
+ invalidate();const rev=revision;working=true;controls();setStatus('reviewing');const args={oldModule:state.oldModule,newModule:state.newModule,callers:state.callers,inputMap:state.inputMap,outputMap:state.outputMap,selected:[...state.selected]};
+ try{const plan=state.savedPlan??await createPlan(args),result=await applyPlan({...args,plan});if(rev!==revision)return;state.result=result;working=false;setStatus('ready','success');renderResult();controls();}catch(e){if(rev!==revision)return;working=false;error(e);}
+});
+$('export').addEventListener('click',()=>{if(!state.result||reading||working)return;const r=state.result,files=[...r.files,{name:'migration.json',text:JSON.stringify(r.plan,null,2)+'\n'},{name:'receipt.json',text:JSON.stringify(r.receipt,null,2)+'\n'},{name:'receipt.txt',text:receiptText(r)}];const blob=new Blob([zipFiles(files)],{type:'application/zip'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`${r.plan.target}-migration.zip`;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);setStatus('exported','success');});
+loadDemo();
+</script></body></html>

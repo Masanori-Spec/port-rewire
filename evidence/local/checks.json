@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-05",
+  "coreTests": {
+    "passed": 74,
+    "failed": 0,
+    "includes": "69 core cases and 5 UI event-state cases"
+  },
+  "independentPythonMethods": {
+    "passed": 21,
+    "failed": 0
+  },
+  "nativePdVersion": "0.55.2+ds-2",
+  "nativeCases": 4,
+  "actualExportedAbstractionSupportAndCallersTested": true,
+  "browser": {
+    "status": "not yet run",
+    "requiredRunner": "non-root GitHub-hosted Ubuntu 22.04",
+    "sandbox": true
+  },
+  "runtimeDependencies": 0,
+  "independentReview": {
+    "counterexamples": "passed",
+    "seededExactByteMigrations": 120,
+    "eventModelRaces": 5,
+    "browserRun": false
+  }
+}

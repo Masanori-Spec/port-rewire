@@ -1,0 +1,48 @@
+{
+  "oracle": "port-rewire/python-stdlib-1",
+  "status": "passed",
+  "bundles": [
+    {
+      "directory": "artifacts/demo",
+      "status": "passed",
+      "identity": false,
+      "callers": 3,
+      "selectedInstances": 2,
+      "changedConnections": 16,
+      "changedEndpointTokens": 16,
+      "untouchedCallerBytesVerified": 1985,
+      "checks": [
+        "handwritten endpoint table",
+        "all untouched bytes",
+        "object order and indices",
+        "canvas-local connection order",
+        "CRLF and escaping",
+        "unselected connection",
+        "revised abstraction bytes",
+        "input and output SHA-256",
+        "contract and receipt evidence"
+      ]
+    },
+    {
+      "directory": "artifacts/identity",
+      "status": "passed",
+      "identity": true,
+      "callers": 3,
+      "selectedInstances": 2,
+      "changedConnections": 0,
+      "changedEndpointTokens": 0,
+      "untouchedCallerBytesVerified": 2001,
+      "checks": [
+        "handwritten endpoint table",
+        "all untouched bytes",
+        "object order and indices",
+        "canvas-local connection order",
+        "CRLF and escaping",
+        "unselected connection",
+        "revised abstraction bytes",
+        "input and output SHA-256",
+        "contract and receipt evidence"
+      ]
+    }
+  ]
+}

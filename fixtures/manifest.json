@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "name": "triplet",
+  "oldModule": "fixtures/native/old/triplet.pd",
+  "newModule": "fixtures/native/new/triplet.pd",
+  "inputMap": [2, 0, 1],
+  "outputMap": [1, 0],
+  "callers": [
+    {
+      "name": "caller-a.pd",
+      "source": "fixtures/native/original/caller-a.pd",
+      "expected": "fixtures/native/remapped/caller-a.pd",
+      "lineEnding": "LF",
+      "selected": [{"canvas": "root", "index": 7}]
+    },
+    {
+      "name": "caller-b.pd",
+      "source": "fixtures/native/original/caller-b.pd",
+      "expected": "fixtures/native/remapped/caller-b.pd",
+      "lineEnding": "CRLF",
+      "selected": [{"canvas": "root/2", "index": 7}]
+    }
+  ],
+  "harness": "fixtures/native/support/harness.pd",
+  "support": ["fixtures/native/support/triplet-extra.pd"],
+  "scope": "Own-authored Pure Data message-control fixtures only"
+}

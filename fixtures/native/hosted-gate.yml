@@ -1,0 +1,24 @@
+# Ready-to-use hosted feasibility job; copy into .github/workflows as authorized.
+name: Native Pure Data gate
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-pd:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official headless Pd core
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y puredata-core
+      - name: Verify authored native fixtures
+        run: python3 scripts/native_gate.py --output artifacts/native-gate
+      - name: Preserve exact native traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-pd-gate
+          path: artifacts/native-gate/
+          if-no-files-found: error
