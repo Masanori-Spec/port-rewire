@@ -38,3 +38,9 @@ At this source package's initial handoff, the hosted browser workflow is **not y
 ## What the evidence does not establish
 
 The native fixture verifies a known arithmetic control abstraction and deterministic message order. It does not establish semantic equivalence for arbitrary imported patches, compatibility with arbitrary Pd syntax, signal processing, external libraries, search paths, dynamic patches, or real hardware. No uploaded user patches are executed by the app or the tests.
+
+## Print and enlarged-text reflow additions
+
+The current candidate adds two hosted A4 print checks (Japanese and English). These capture print-media previews, PDFs and every PDF page rendered with the official distribution Poppler tools. Assertions cover all 16 change records, 32 endpoint tuples, bundle filenames, the contract SHA-256, localized headings, hidden interactive controls, A4 dimensions, bounded page count, nonblank pixels and white paper margins. These new print checks require a fresh hosted run; authoring and local syntax checks are not print evidence.
+
+Enlarged-text checks now inspect internal clipping of source context, revised-port details, index chips and the brand mark, and measure selected option text against available width. Mobile rows stack, comments expand, and revised X/object identities wrap outside the native select control. Screenshots begin at scroll top and assert that an unfocused skip link is visually clipped. Final pixel review remains required after the hosted run.

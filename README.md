@@ -71,3 +71,7 @@ The fixture checks old/original baseline, revised/original negative control, han
 Own application, parser, ZIP writer, synthetic fixtures and tests: MIT. Runtime dependencies: none. Playwright is development-only (Apache-2.0). Pd and its runtime dependencies are fetched from the operating-system distribution only when tests run; no Pd, ELSE, pd-vibe, tutorial patches, binaries or SDKs are distributed here. This is an independent project, not affiliated with those projects.
 
 Resource bounds additionally limit each direction to 64 ports, the caller bundle to 512 exact-name instances and 5,000 connection records. These bounds keep the review UI finite; larger projects should be split into reviewed bundles.
+
+## Printing a reviewed migration
+
+After previewing, use the browser’s Print command. The print view includes the reviewed changes, contract SHA-256, bundle filenames and verification caveats. Interactive file/mapping controls are omitted. Printing does not apply a migration or change any source file.

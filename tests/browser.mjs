@@ -8,7 +8,7 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
-import {mkdir, readFile, writeFile} from 'node:fs/promises';
+import {mkdir, readFile, writeFile, readdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {chromium, expect as baseExpect} from '@playwright/test';
@@ -40,6 +40,9 @@ async function check(name, action) {
 }
 async function screenshot(page, name) {
   currentPage = page;
+  await page.evaluate(async () => {scrollTo(0, 0); await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));});
+  const skip = await page.locator('.skip').evaluate(n => ({focused: n === document.activeElement, width: n.getBoundingClientRect().width, height: n.getBoundingClientRect().height, clip: getComputedStyle(n).clipPath, display: getComputedStyle(n).display}));
+  if (!skip.focused && skip.display !== 'none') assert.ok(skip.width <= 1 && skip.height <= 1 && skip.clip !== 'none', 'Unfocused skip link must be visually clipped');
   await page.screenshot({path: path.join(OUT, name), fullPage: true, animations: 'disabled'});
   report.screenshots.push(name);
 }
@@ -50,6 +53,64 @@ async function noOverflow(page) {
   assert.ok(geometry.document <= geometry.viewport + 1, `Document horizontal overflow: ${JSON.stringify(geometry)}`);
   assert.ok(geometry.body <= geometry.viewport + 1, `Body horizontal overflow: ${JSON.stringify(geometry)}`);
   return geometry;
+}
+async function noInternalClipping(page) {
+  const boxes = await page.locator('.port-context, .selected-port-detail, .port-id b, .mark').evaluateAll(nodes => nodes.filter(n => n.getClientRects().length).map(n => ({className: n.className, text: n.textContent, scrollWidth: n.scrollWidth, clientWidth: n.clientWidth, scrollHeight: n.scrollHeight, clientHeight: n.clientHeight})));
+  for (const box of boxes) {
+    assert.ok(box.scrollWidth <= box.clientWidth + 1, `Internally clipped width: ${JSON.stringify(box)}`);
+    assert.ok(box.scrollHeight <= box.clientHeight + 1, `Internally clipped height: ${JSON.stringify(box)}`);
+  }
+  const selected = await page.locator('#portMaps select').evaluateAll(nodes => nodes.map(n => {
+    const style = getComputedStyle(n), canvas = document.createElement('canvas'), ctx = canvas.getContext('2d');
+    ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    const text = n.selectedOptions[0]?.textContent || '', detail = document.getElementById(n.getAttribute('aria-describedby'));
+    return {id: n.id, text, textWidth: ctx.measureText(text).width, available: n.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - 24, detail: detail?.textContent, detailVisible: !!detail?.getClientRects().length};
+  }));
+  for (const item of selected) {
+    assert.ok(item.textWidth <= item.available, `Selected option text clipped: ${JSON.stringify(item)}`);
+    assert.equal(item.detailVisible, true); assert.match(item.detail, /x=-?\d+.*#\d+/);
+  }
+  return {boxes, selected};
+}
+function grayPageMetrics(bytes) {
+  let at = 0;
+  const token = () => {while (at < bytes.length) {if (bytes[at] === 35) {while (at < bytes.length && bytes[at] !== 10) at++;} else if ([9,10,13,32].includes(bytes[at])) at++; else break;}const start = at;while (at < bytes.length && ![9,10,13,32].includes(bytes[at])) at++;return bytes.subarray(start,at).toString('ascii');};
+  assert.equal(token(),'P5');const width = Number(token()), height = Number(token());assert.equal(Number(token()),255);
+  if(bytes[at]===13 && bytes[at+1]===10)at+=2;else at++;
+  const pixels=bytes.subarray(at);assert.equal(pixels.length,width*height);
+  let darkPixels=0,minX=width,minY=height,maxX=-1,maxY=-1;
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++)if(pixels[y*width+x]<210){darkPixels++;minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);}
+  assert.ok(darkPixels>=500,'Blank or nearly blank print page');
+  assert.ok(minX>=8 && minY>=8 && maxX<width-8 && maxY<height-8,`Print content touches paper edge: ${JSON.stringify({width,height,minX,minY,maxX,maxY})}`);
+  return {width,height,darkPixels,inkBounds:{minX,minY,maxX,maxY}};
+}
+async function printReview(page, locale) {
+  await language(page,locale);await review(page);await page.emulateMedia({media:'print'});
+  await expect(page.locator('.workgrid')).toBeHidden();await expect(page.locator('#export')).toBeHidden();await expect(page.locator('.head-right')).toBeHidden();
+  await expect(page.locator('#result')).toBeVisible();await expect(page.locator('.change')).toHaveCount(16);await expect(page.locator('.print-contract')).toBeVisible();
+  const hash=(await page.locator('.print-contract').textContent()).match(/[0-9a-f]{64}/)?.[0];assert.ok(hash,'Missing printable contract identity');
+  const tuples=await page.locator('.change-code .before, .change-code .after').allTextContents();assert.equal(tuples.length,32);
+  await noOverflow(page);await screenshot(page,`print-${locale}-preview.png`);
+  const pdfPath=path.join(OUT,`print-${locale}.pdf`);await page.pdf({path:pdfPath,format:'A4',preferCSSPageSize:true,printBackground:true,displayHeaderFooter:false});
+  const info=execFileSync('pdfinfo',[pdfPath],{encoding:'utf8',timeout:15000});const pages=Number(info.match(/^Pages:\s+(\d+)/m)?.[1]);
+  assert.ok(pages>=1 && pages<=2,`Unexpected fixture print length: ${pages} pages`);
+  const dimensions=info.match(/^Page size:\s+([\d.]+) x ([\d.]+) pts/m);assert.ok(dimensions);assert.ok(Math.abs(Number(dimensions[1])-595.28)<2 && Math.abs(Number(dimensions[2])-841.89)<2,'Print PDF is not A4');
+  const textPath=path.join(OUT,`print-${locale}.txt`);execFileSync('pdftotext',['-layout','-enc','UTF-8',pdfPath,textPath],{timeout:15000});
+  const text=await readFile(textPath,'utf8'),compact=text.replace(/\s+/g,'');
+  assert.ok(compact.includes(locale==='ja'?'変更を確認して書き出す':'Review&export'),'Localized print heading missing');
+  assert.ok(compact.includes(hash),'Printable contract SHA-256 is missing or clipped');
+  for(const tuple of tuples)assert.ok(compact.includes(tuple.replace(/\s+/g,'')),`Missing print endpoint tuple: ${tuple}`);
+  assert.ok((text.match(/caller-a\.pd/g)||[]).length>=8 && (text.match(/caller-b\.pd/g)||[]).length>=8,'Print omitted change records');
+  for(const name of REQUIRED_MEMBERS)assert.ok(compact.includes(name),`Print bundle member missing: ${name}`);
+  assert.ok(!compact.includes(locale==='ja'?'移行ZIPを保存':'SavemigrationZIP'),'Interactive export control leaked into print');
+  const prefix=path.join(OUT,`print-${locale}-page`);execFileSync('pdftoppm',['-f','1','-l',String(pages),'-scale-to','1500','-png',pdfPath,prefix],{timeout:30000});
+  const pagePngs=(await readdir(OUT)).filter(name=>name.startsWith(`print-${locale}-page-`)&&name.endsWith('.png')).sort();assert.equal(pagePngs.length,pages);
+  const pixels=[];for(let number=1;number<=pages;number++){
+    const pgm=execFileSync('pdftoppm',['-f',String(number),'-l',String(number),'-singlefile','-gray','-r','72',pdfPath],{timeout:15000,maxBuffer:8_000_000});
+    pixels.push({page:number,...grayPageMetrics(pgm),png:pagePngs[number-1]});
+  }
+  report.prints??=[];const detail={locale,pdf:path.basename(pdfPath),sha256:sha256(await readFile(pdfPath)),pages,contractSha256:hash,pixels};report.prints.push(detail);
+  report.screenshots.push(...pagePngs);return detail;
 }
 async function cleared(page) {
   // Immediate reads, not retrying assertions: stale previews must clear before
@@ -649,14 +710,14 @@ try {
   const mobile = await openPage({width: 390, height: 844}, true);
   await check('390px Japanese mobile reviewed result has no horizontal overflow', async () => {
     await review(mobile); await screenshot(mobile, 'mobile-ja-ready.png');
-    return await noOverflow(mobile);
+    return {dimensions:await noOverflow(mobile),internal:await noInternalClipping(mobile)};
   });
   await check('390px English mobile reviewed result preserves state without overflow', async () => {
     await language(mobile, 'en');
     await expect(mobile.locator('#export')).toBeEnabled();
     assert.deepEqual(await mobile.locator('.stat b').allTextContents(), ['2', '16', '16']);
     await screenshot(mobile, 'mobile-en-ready.png');
-    return await noOverflow(mobile);
+    return {dimensions:await noOverflow(mobile),internal:await noInternalClipping(mobile)};
   });
   for (const [label, viewport, isMobile] of [['desktop', {width: 1360, height: 900}, false], ['mobile', {width: 390, height: 844}, true]]) {
     for (const locale of ['ja', 'en']) {
@@ -668,11 +729,17 @@ try {
         await expect(enlarged.locator('#review')).toBeVisible();
         await expect(enlarged.locator('#export')).toBeEnabled();
         await screenshot(enlarged, `${label}-${locale}-text-200.png`);
-        const dimensions = await noOverflow(enlarged);
+        const dimensions = await noOverflow(enlarged);const internal=await noInternalClipping(enlarged);
         await enlarged.context().close(); currentPage = mobile;
-        return {...text, dimensions};
+        return {...text, dimensions, internal};
       });
     }
+  }
+  for(const locale of ['ja','en']) {
+    await check(`A4 ${locale} print preserves all reviewed changes and renders within paper margins`,async()=>{
+      const printable=await openPage({width:794,height:1123});const detail=await printReview(printable,locale);
+      await printable.context().close();currentPage=mobile;return detail;
+    });
   }
   await check('No external requests, failed loads, uncaught errors or injection dialogs', async () => {
     assert.deepEqual(EXTERNAL_REQUESTS, []);
