@@ -75,3 +75,14 @@ Resource bounds additionally limit each direction to 64 ports, the caller bundle
 ## Printing a reviewed migration
 
 After previewing, use the browser’s Print command. The print view includes the reviewed changes, contract SHA-256, bundle filenames and verification caveats. Interactive file/mapping controls are omitted. Printing does not apply a migration or change any source file.
+
+## Verified example and previews
+
+[Hosted verification](https://github.com/Masanori-Spec/port-rewire/actions/runs/37273869596): 74 Node tests per Node version, 21 independent Python test methods, 40 browser checks, and native Pd verification of the actual browser download. See the [verification record](docs/VALIDATION.md) for the exact revision and limits.
+
+- [Japanese desktop](evidence/hosted/desktop-ja-ready.png) / [English desktop](evidence/hosted/desktop-en-ready.png)
+- [Japanese mobile](evidence/hosted/mobile-ja-ready.png) / [English mobile](evidence/hosted/mobile-en-ready.png)
+- [Japanese enlarged text](evidence/hosted/mobile-ja-text-200.png) / [English enlarged text](evidence/hosted/mobile-en-text-200.png)
+- [Japanese A4 review](evidence/hosted/print-ja.pdf) / [English A4 review](evidence/hosted/print-en.pdf)
+
+All previews use the included own-authored synthetic fixture. No user patch was uploaded or executed.

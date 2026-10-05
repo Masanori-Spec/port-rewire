@@ -1,0 +1,1782 @@
+{
+  "schema": "port-rewire/browser-1",
+  "ok": true,
+  "baseURL": "http://127.0.0.1:4173/",
+  "commit": "1fd8a55c31fd1ff7ae14b3fe025ea01f736b00aa",
+  "startedAt": "2026-10-05T06:45:16.464Z",
+  "checks": [
+    {
+      "name": "Hosted Ubuntu 22.04 non-root execution boundary",
+      "ok": true,
+      "detail": {
+        "runner": "github-hosted",
+        "os": "Ubuntu 22.04",
+        "uid": 1001
+      }
+    },
+    {
+      "name": "Chromium sandbox command line independently inspected",
+      "ok": true,
+      "detail": {
+        "chromiumSandbox": true,
+        "forbiddenFlags": []
+      }
+    },
+    {
+      "name": "Japanese desktop preloaded example requires explicit review",
+      "ok": true,
+      "detail": {
+        "viewport": 1360,
+        "document": 1360,
+        "body": 1360,
+        "offenders": []
+      }
+    },
+    {
+      "name": "Japanese and English preserve reviewed sources, maps and selection",
+      "ok": true,
+      "detail": {
+        "ja": [
+          "動作例を読み込む",
+          "すべてリセット",
+          "変更をプレビュー",
+          "移行ZIPを保存"
+        ],
+        "en": [
+          "Load worked example",
+          "Reset everything",
+          "Preview changes",
+          "Save migration ZIP"
+        ],
+        "dimensions": {
+          "viewport": 1360,
+          "document": 1360,
+          "body": 1360,
+          "offenders": []
+        }
+      }
+    },
+    {
+      "name": "Actual browser migration ZIP passes independent endpoint and byte oracle",
+      "ok": true,
+      "detail": {
+        "directory": "artifacts/browser/extracted",
+        "oracle": {
+          "oracle": "port-rewire/python-stdlib-1",
+          "status": "passed",
+          "bundles": [
+            {
+              "directory": "/home/runner/work/port-rewire/port-rewire/artifacts/browser/extracted",
+              "status": "passed",
+              "identity": false,
+              "callers": 3,
+              "selectedInstances": 2,
+              "changedConnections": 16,
+              "changedEndpointTokens": 16,
+              "untouchedCallerBytesVerified": 1985,
+              "checks": [
+                "handwritten endpoint table",
+                "all untouched bytes",
+                "object order and indices",
+                "canvas-local connection order",
+                "CRLF and escaping",
+                "unselected connection",
+                "revised abstraction bytes",
+                "input and output SHA-256",
+                "contract and receipt evidence"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Keyboard skip link, tab order, visible focus and Enter review",
+      "ok": true,
+      "detail": {
+        "skip": {
+          "top": 10,
+          "width": 155.65625
+        },
+        "firstAfterSkip": "demo",
+        "controls": [
+          {
+            "id": "language",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "demo",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "reset",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "oldFile",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "newFile",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "callerFiles",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "planFile",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "newMapping",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "inputMap-0",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "inputMap-1",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "inputMap-2",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "outputMap-0",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "outputMap-1",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "",
+            "instance": "caller-a.pd::root::7",
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "",
+            "instance": "caller-b.pd::root/2::7",
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "review",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          {
+            "id": "export",
+            "instance": null,
+            "visible": true,
+            "focusVisible": true,
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Raw source-file import preserves CRLF and requires every explicit map",
+      "ok": true,
+      "detail": {
+        "directory": "artifacts/browser/imported-extracted",
+        "oracle": {
+          "oracle": "port-rewire/python-stdlib-1",
+          "status": "passed",
+          "bundles": [
+            {
+              "directory": "/home/runner/work/port-rewire/port-rewire/artifacts/browser/imported-extracted",
+              "status": "passed",
+              "identity": false,
+              "callers": 3,
+              "selectedInstances": 2,
+              "changedConnections": 16,
+              "changedEndpointTokens": 16,
+              "untouchedCallerBytesVerified": 1985,
+              "checks": [
+                "handwritten endpoint table",
+                "all untouched bytes",
+                "object order and indices",
+                "canvas-local connection order",
+                "CRLF and escaping",
+                "unselected connection",
+                "revised abstraction bytes",
+                "input and output SHA-256",
+                "contract and receipt evidence"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Incomplete and duplicate mappings are denied without stale exports",
+      "ok": true
+    },
+    {
+      "name": "Empty instance selection is denied",
+      "ok": true
+    },
+    {
+      "name": "Nested-only selection changes the nested caller and preserves other bytes",
+      "ok": true,
+      "detail": {
+        "selected": "caller-b.pd::root/2::7",
+        "unchanged": [
+          "caller-a.pd",
+          "triplet-extra.pd"
+        ],
+        "changedTokens": 8
+      }
+    },
+    {
+      "name": "Identity mapping exports byte-identical callers and zero-change receipt",
+      "ok": true,
+      "detail": {
+        "directory": "artifacts/browser/identity-extracted",
+        "oracle": {
+          "oracle": "port-rewire/python-stdlib-1",
+          "status": "passed",
+          "bundles": [
+            {
+              "directory": "/home/runner/work/port-rewire/port-rewire/artifacts/browser/identity-extracted",
+              "status": "passed",
+              "identity": true,
+              "callers": 3,
+              "selectedInstances": 2,
+              "changedConnections": 0,
+              "changedEndpointTokens": 0,
+              "untouchedCallerBytesVerified": 2001,
+              "checks": [
+                "handwritten endpoint table",
+                "all untouched bytes",
+                "object order and indices",
+                "canvas-local connection order",
+                "CRLF and escaping",
+                "unselected connection",
+                "revised abstraction bytes",
+                "input and output SHA-256",
+                "contract and receipt evidence"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Saved contract import locks mapping and selection and revalidates source hashes",
+      "ok": true,
+      "detail": {
+        "directory": "artifacts/browser/saved-contract-extracted",
+        "oracle": {
+          "oracle": "port-rewire/python-stdlib-1",
+          "status": "passed",
+          "bundles": [
+            {
+              "directory": "/home/runner/work/port-rewire/port-rewire/artifacts/browser/saved-contract-extracted",
+              "status": "passed",
+              "identity": false,
+              "callers": 3,
+              "selectedInstances": 2,
+              "changedConnections": 16,
+              "changedEndpointTokens": 16,
+              "untouchedCallerBytesVerified": 1985,
+              "checks": [
+                "handwritten endpoint table",
+                "all untouched bytes",
+                "object order and indices",
+                "canvas-local connection order",
+                "CRLF and escaping",
+                "unselected connection",
+                "revised abstraction bytes",
+                "input and output SHA-256",
+                "contract and receipt evidence"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Saved contract rejects changed old source hashes",
+      "ok": true
+    },
+    {
+      "name": "Saved contract rejects changed revised source hashes",
+      "ok": true
+    },
+    {
+      "name": "Saved contract rejects changed caller source hashes",
+      "ok": true
+    },
+    {
+      "name": "Double application of a saved contract to exported callers is denied",
+      "ok": true
+    },
+    {
+      "name": "New mapping exits saved contract and requires explicit choices again",
+      "ok": true
+    },
+    {
+      "name": "Every map, selection and file change invalidates preview in the same event task",
+      "ok": true,
+      "detail": [
+        {
+          "selector": "#inputMap-0",
+          "disabled": true,
+          "hidden": true,
+          "children": 0,
+          "emptyVisible": true
+        },
+        {
+          "selector": "#outputMap-0",
+          "disabled": true,
+          "hidden": true,
+          "children": 0,
+          "emptyVisible": true
+        },
+        {
+          "selector": "input[data-instance=\"caller-b.pd::root/2::7\"]",
+          "disabled": true,
+          "hidden": true,
+          "children": 0,
+          "emptyVisible": true
+        },
+        {
+          "selector": "#oldFile",
+          "disabled": true,
+          "hidden": true,
+          "children": 0,
+          "emptyVisible": true
+        },
+        {
+          "selector": "#newFile",
+          "disabled": true,
+          "hidden": true,
+          "children": 0,
+          "emptyVisible": true
+        },
+        {
+          "selector": "#callerFiles",
+          "disabled": true,
+          "hidden": true,
+          "children": 0,
+          "emptyVisible": true
+        },
+        {
+          "selector": "#planFile",
+          "disabled": true,
+          "hidden": true,
+          "children": 0,
+          "emptyVisible": true
+        }
+      ]
+    },
+    {
+      "name": "New mapping cancels a pending contract text read and releases the busy state",
+      "ok": true,
+      "detail": {
+        "cancelledPendingContract": true,
+        "reviewUnlockedBeforeOldReadSettled": true
+      }
+    },
+    {
+      "name": "Independent old and revised file reads both commit when completed in reverse order",
+      "ok": true,
+      "detail": {
+        "directory": "artifacts/browser/concurrent-source-extracted",
+        "oracle": {
+          "oracle": "port-rewire/python-stdlib-1",
+          "status": "passed",
+          "bundles": [
+            {
+              "directory": "/home/runner/work/port-rewire/port-rewire/artifacts/browser/concurrent-source-extracted",
+              "status": "passed",
+              "identity": false,
+              "callers": 3,
+              "selectedInstances": 2,
+              "changedConnections": 16,
+              "changedEndpointTokens": 16,
+              "untouchedCallerBytesVerified": 1985,
+              "checks": [
+                "handwritten endpoint table",
+                "all untouched bytes",
+                "object order and indices",
+                "canvas-local connection order",
+                "CRLF and escaping",
+                "unselected connection",
+                "revised abstraction bytes",
+                "input and output SHA-256",
+                "contract and receipt evidence"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Latest same-field source replacement wins even when the older read finishes last",
+      "ok": true,
+      "detail": {
+        "directory": "artifacts/browser/latest-read-extracted",
+        "oracle": {
+          "oracle": "port-rewire/python-stdlib-1",
+          "status": "passed",
+          "bundles": [
+            {
+              "directory": "/home/runner/work/port-rewire/port-rewire/artifacts/browser/latest-read-extracted",
+              "status": "passed",
+              "identity": false,
+              "callers": 3,
+              "selectedInstances": 2,
+              "changedConnections": 16,
+              "changedEndpointTokens": 16,
+              "untouchedCallerBytesVerified": 1985,
+              "checks": [
+                "handwritten endpoint table",
+                "all untouched bytes",
+                "object order and indices",
+                "canvas-local connection order",
+                "CRLF and escaping",
+                "unselected connection",
+                "revised abstraction bytes",
+                "input and output SHA-256",
+                "contract and receipt evidence"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Pending contract and caller reads disable all remaining map and instance controls",
+      "ok": true,
+      "detail": [
+        {
+          "field": "planFile",
+          "disabledControls": 7,
+          "pendingReads": 1
+        },
+        {
+          "field": "callerFiles",
+          "disabledControls": 5,
+          "pendingReads": 3
+        }
+      ]
+    },
+    {
+      "name": "Reset cancels a delayed File.arrayBuffer read without resurrecting sources",
+      "ok": true
+    },
+    {
+      "name": "Reset cancels a delayed SHA-256 review result without resurrecting export",
+      "ok": true
+    },
+    {
+      "name": "Read failures are contained, clear stale results and allow recovery",
+      "ok": true
+    },
+    {
+      "name": "Malformed and unsupported contracts fail closed and recover",
+      "ok": true
+    },
+    {
+      "name": "Invalid UTF-8 and unsupported signal-port sources cannot preserve old exports",
+      "ok": true
+    },
+    {
+      "name": "Oversized file, too many callers and oversized aggregate are rejected",
+      "ok": true,
+      "detail": {
+        "perFileBytes": 524289,
+        "callerCount": 21,
+        "aggregateCallerBytes": 4500000,
+        "contractBytes": 524289
+      }
+    },
+    {
+      "name": "Hostile filenames render literally and cannot enter a ZIP",
+      "ok": true
+    },
+    {
+      "name": "Hostile patch comment text is displayed as text without DOM execution",
+      "ok": true,
+      "detail": {
+        "literalText": "<img src=x onerror=alert(42)>",
+        "injectedImageElements": 0
+      }
+    },
+    {
+      "name": "Standalone file:// offline page reviews and exports independently verified ZIP",
+      "ok": true,
+      "detail": {
+        "offline": true,
+        "protocol": "file:",
+        "directory": "artifacts/browser/offline-extracted",
+        "oracle": {
+          "oracle": "port-rewire/python-stdlib-1",
+          "status": "passed",
+          "bundles": [
+            {
+              "directory": "/home/runner/work/port-rewire/port-rewire/artifacts/browser/offline-extracted",
+              "status": "passed",
+              "identity": false,
+              "callers": 3,
+              "selectedInstances": 2,
+              "changedConnections": 16,
+              "changedEndpointTokens": 16,
+              "untouchedCallerBytesVerified": 1985,
+              "checks": [
+                "handwritten endpoint table",
+                "all untouched bytes",
+                "object order and indices",
+                "canvas-local connection order",
+                "CRLF and escaping",
+                "unselected connection",
+                "revised abstraction bytes",
+                "input and output SHA-256",
+                "contract and receipt evidence"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "390px Japanese mobile reviewed result has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "dimensions": {
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "offenders": []
+        },
+        "internal": {
+          "boxes": [
+            {
+              "className": "mark",
+              "text": "⇄",
+              "scrollWidth": 31,
+              "clientWidth": 31,
+              "scrollHeight": 31,
+              "clientHeight": 31
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "port-context",
+              "text": "Own-authored triplet: result=value*gain+bias and echo=value",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · オブジェクト #1",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · オブジェクト #2",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "",
+              "text": "2",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=180 · オブジェクト #3",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · オブジェクト #7",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · オブジェクト #8",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            }
+          ],
+          "selected": [
+            {
+              "id": "inputMap-0",
+              "text": "2",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=300 · オブジェクト #1",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-1",
+              "text": "0",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=60 · オブジェクト #2",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-2",
+              "text": "1",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=180 · オブジェクト #3",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-0",
+              "text": "1",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=300 · オブジェクト #7",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-1",
+              "text": "0",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=60 · オブジェクト #8",
+              "detailVisible": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "390px English mobile reviewed result preserves state without overflow",
+      "ok": true,
+      "detail": {
+        "dimensions": {
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "offenders": []
+        },
+        "internal": {
+          "boxes": [
+            {
+              "className": "mark",
+              "text": "⇄",
+              "scrollWidth": 31,
+              "clientWidth": 31,
+              "scrollHeight": 31,
+              "clientHeight": 31
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "port-context",
+              "text": "Own-authored triplet: result=value*gain+bias and echo=value",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · object #1",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · object #2",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "",
+              "text": "2",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=180 · object #3",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · object #7",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 20,
+              "clientWidth": 20,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · object #8",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 20,
+              "clientHeight": 20
+            }
+          ],
+          "selected": [
+            {
+              "id": "inputMap-0",
+              "text": "2",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=300 · object #1",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-1",
+              "text": "0",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=60 · object #2",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-2",
+              "text": "1",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=180 · object #3",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-0",
+              "text": "1",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=300 · object #7",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-1",
+              "text": "0",
+              "textWidth": 7.80126953125,
+              "available": 251,
+              "detail": "x=60 · object #8",
+              "detailVisible": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "200% text ja desktop preserves a usable reviewed result without overflow",
+      "ok": true,
+      "detail": {
+        "method": "Every element computed font-size doubled; viewport unchanged",
+        "elements": 283,
+        "bodyFontBefore": 16,
+        "bodyFontAfter": 32,
+        "dimensions": {
+          "viewport": 1360,
+          "document": 1360,
+          "body": 1360,
+          "offenders": []
+        },
+        "internal": {
+          "boxes": [
+            {
+              "className": "mark",
+              "text": "⇄",
+              "scrollWidth": 85,
+              "clientWidth": 85,
+              "scrollHeight": 85,
+              "clientHeight": 85
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "port-context",
+              "text": "Own-authored triplet: result=value*gain+bias and echo=value",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 108,
+              "clientHeight": 108
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · オブジェクト #1",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · オブジェクト #2",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "",
+              "text": "2",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=180 · オブジェクト #3",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · オブジェクト #7",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · オブジェクト #8",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            }
+          ],
+          "selected": [
+            {
+              "id": "inputMap-0",
+              "text": "2",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=300 · オブジェクト #1",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-1",
+              "text": "0",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=60 · オブジェクト #2",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-2",
+              "text": "1",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=180 · オブジェクト #3",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-0",
+              "text": "1",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=300 · オブジェクト #7",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-1",
+              "text": "0",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=60 · オブジェクト #8",
+              "detailVisible": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "200% text en desktop preserves a usable reviewed result without overflow",
+      "ok": true,
+      "detail": {
+        "method": "Every element computed font-size doubled; viewport unchanged",
+        "elements": 283,
+        "bodyFontBefore": 16,
+        "bodyFontAfter": 32,
+        "dimensions": {
+          "viewport": 1360,
+          "document": 1360,
+          "body": 1360,
+          "offenders": []
+        },
+        "internal": {
+          "boxes": [
+            {
+              "className": "mark",
+              "text": "⇄",
+              "scrollWidth": 85,
+              "clientWidth": 85,
+              "scrollHeight": 85,
+              "clientHeight": 85
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "port-context",
+              "text": "Own-authored triplet: result=value*gain+bias and echo=value",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 108,
+              "clientHeight": 108
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · object #1",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · object #2",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "",
+              "text": "2",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=180 · object #3",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · object #7",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 46,
+              "clientWidth": 46,
+              "scrollHeight": 46,
+              "clientHeight": 46
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · object #8",
+              "scrollWidth": 372,
+              "clientWidth": 372,
+              "scrollHeight": 36,
+              "clientHeight": 36
+            }
+          ],
+          "selected": [
+            {
+              "id": "inputMap-0",
+              "text": "2",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=300 · object #1",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-1",
+              "text": "0",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=60 · object #2",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-2",
+              "text": "1",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=180 · object #3",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-0",
+              "text": "1",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=300 · object #7",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-1",
+              "text": "0",
+              "textWidth": 16.802734375,
+              "available": 330,
+              "detail": "x=60 · object #8",
+              "detailVisible": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "200% text ja mobile preserves a usable reviewed result without overflow",
+      "ok": true,
+      "detail": {
+        "method": "Every element computed font-size doubled; viewport unchanged",
+        "elements": 283,
+        "bodyFontBefore": 16,
+        "bodyFontAfter": 32,
+        "dimensions": {
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "offenders": []
+        },
+        "internal": {
+          "boxes": [
+            {
+              "className": "mark",
+              "text": "⇄",
+              "scrollWidth": 65,
+              "clientWidth": 65,
+              "scrollHeight": 65,
+              "clientHeight": 65
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "port-context",
+              "text": "Own-authored triplet: result=value*gain+bias and echo=value",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 108,
+              "clientHeight": 108
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · オブジェクト #1",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · オブジェクト #2",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            },
+            {
+              "className": "",
+              "text": "2",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=180 · オブジェクト #3",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · オブジェクト #7",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · オブジェクト #8",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            }
+          ],
+          "selected": [
+            {
+              "id": "inputMap-0",
+              "text": "2",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=300 · オブジェクト #1",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-1",
+              "text": "0",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=60 · オブジェクト #2",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-2",
+              "text": "1",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=180 · オブジェクト #3",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-0",
+              "text": "1",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=300 · オブジェクト #7",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-1",
+              "text": "0",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=60 · オブジェクト #8",
+              "detailVisible": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "200% text en mobile preserves a usable reviewed result without overflow",
+      "ok": true,
+      "detail": {
+        "method": "Every element computed font-size doubled; viewport unchanged",
+        "elements": 283,
+        "bodyFontBefore": 16,
+        "bodyFontAfter": 32,
+        "dimensions": {
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "offenders": []
+        },
+        "internal": {
+          "boxes": [
+            {
+              "className": "mark",
+              "text": "⇄",
+              "scrollWidth": 65,
+              "clientWidth": 65,
+              "scrollHeight": 65,
+              "clientHeight": 65
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "port-context",
+              "text": "Own-authored triplet: result=value*gain+bias and echo=value",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 108,
+              "clientHeight": 108
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · object #1",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · object #2",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            },
+            {
+              "className": "",
+              "text": "2",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=180 · object #3",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            },
+            {
+              "className": "",
+              "text": "0",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=300 · object #7",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            },
+            {
+              "className": "",
+              "text": "1",
+              "scrollWidth": 42,
+              "clientWidth": 42,
+              "scrollHeight": 42,
+              "clientHeight": 42
+            },
+            {
+              "className": "selected-port-detail",
+              "text": "x=60 · object #8",
+              "scrollWidth": 289,
+              "clientWidth": 289,
+              "scrollHeight": 39,
+              "clientHeight": 39
+            }
+          ],
+          "selected": [
+            {
+              "id": "inputMap-0",
+              "text": "2",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=300 · object #1",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-1",
+              "text": "0",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=60 · object #2",
+              "detailVisible": true
+            },
+            {
+              "id": "inputMap-2",
+              "text": "1",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=180 · object #3",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-0",
+              "text": "1",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=300 · object #7",
+              "detailVisible": true
+            },
+            {
+              "id": "outputMap-1",
+              "text": "0",
+              "textWidth": 15.6025390625,
+              "available": 251,
+              "detail": "x=60 · object #8",
+              "detailVisible": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A4 ja print preserves all reviewed changes and renders within paper margins",
+      "ok": true,
+      "detail": {
+        "locale": "ja",
+        "pdf": "print-ja.pdf",
+        "sha256": "0fe40e0b8eb7e0e78e5ab3c85807178feceb3e6834f2f4ed5c4c92f4509e2297",
+        "pages": 1,
+        "contractSha256": "104da3f66822f6f093839f4937784e36473e86364303423c01be21ce6985dcd9",
+        "pixels": [
+          {
+            "page": 1,
+            "width": 595,
+            "height": 842,
+            "darkPixels": 16524,
+            "inkBounds": {
+              "minX": 33,
+              "minY": 39,
+              "maxX": 560,
+              "maxY": 731
+            },
+            "png": "print-ja-page-1.png"
+          }
+        ]
+      }
+    },
+    {
+      "name": "A4 en print preserves all reviewed changes and renders within paper margins",
+      "ok": true,
+      "detail": {
+        "locale": "en",
+        "pdf": "print-en.pdf",
+        "sha256": "f80fa55c76ba7dbf57e0ceed95b6ea9285225e1374f52bb5403d5ab54ff66898",
+        "pages": 1,
+        "contractSha256": "104da3f66822f6f093839f4937784e36473e86364303423c01be21ce6985dcd9",
+        "pixels": [
+          {
+            "page": 1,
+            "width": 595,
+            "height": 842,
+            "darkPixels": 16452,
+            "inkBounds": {
+              "minX": 33,
+              "minY": 39,
+              "maxX": 560,
+              "maxY": 744
+            },
+            "png": "print-en-page-1.png"
+          }
+        ]
+      }
+    },
+    {
+      "name": "No external requests, failed loads, uncaught errors or injection dialogs",
+      "ok": true,
+      "detail": {
+        "requests": [
+          "http://127.0.0.1:4173/",
+          "file:///home/runner/work/port-rewire/port-rewire/dist/port-rewire.html"
+        ],
+        "externalRequests": 0,
+        "browserErrors": 0
+      }
+    }
+  ],
+  "screenshots": [
+    "desktop-ja-ready.png",
+    "desktop-en-ready.png",
+    "offline-file-ready.png",
+    "mobile-ja-ready.png",
+    "mobile-en-ready.png",
+    "desktop-ja-text-200.png",
+    "desktop-en-text-200.png",
+    "mobile-ja-text-200.png",
+    "mobile-en-text-200.png",
+    "print-ja-preview.png",
+    "print-ja-page-1.png",
+    "print-en-preview.png",
+    "print-en-page-1.png"
+  ],
+  "downloads": [
+    {
+      "filename": "downloads/triplet-migration.zip",
+      "suggestedFilename": "triplet-migration.zip",
+      "bytes": 10950,
+      "sha256": "8c7f50905b495ea75fee766f41cb143dd34141c4099d2561979dc1d90301851b"
+    },
+    {
+      "filename": "downloads/imported-crlf-migration.zip",
+      "suggestedFilename": "triplet-migration.zip",
+      "bytes": 10950,
+      "sha256": "8c7f50905b495ea75fee766f41cb143dd34141c4099d2561979dc1d90301851b"
+    },
+    {
+      "filename": "downloads/nested-only-migration.zip",
+      "suggestedFilename": "triplet-migration.zip",
+      "bytes": 8662,
+      "sha256": "c3e0707129a788564ae05bf55aeae89e87b9ab6da7c91f278fcd072923d5ce60"
+    },
+    {
+      "filename": "downloads/identity-migration.zip",
+      "suggestedFilename": "triplet-migration.zip",
+      "bytes": 6497,
+      "sha256": "388dc828c058fba818caf2cf29b06ebd9c818e1ebfcc67d8a6faedec11d4c7d1"
+    },
+    {
+      "filename": "downloads/saved-contract-migration.zip",
+      "suggestedFilename": "triplet-migration.zip",
+      "bytes": 10950,
+      "sha256": "8c7f50905b495ea75fee766f41cb143dd34141c4099d2561979dc1d90301851b"
+    },
+    {
+      "filename": "downloads/concurrent-source-migration.zip",
+      "suggestedFilename": "triplet-migration.zip",
+      "bytes": 10950,
+      "sha256": "8c7f50905b495ea75fee766f41cb143dd34141c4099d2561979dc1d90301851b"
+    },
+    {
+      "filename": "downloads/latest-read-migration.zip",
+      "suggestedFilename": "triplet-migration.zip",
+      "bytes": 10950,
+      "sha256": "8c7f50905b495ea75fee766f41cb143dd34141c4099d2561979dc1d90301851b"
+    },
+    {
+      "filename": "downloads/offline-migration.zip",
+      "suggestedFilename": "triplet-migration.zip",
+      "bytes": 10950,
+      "sha256": "8c7f50905b495ea75fee766f41cb143dd34141c4099d2561979dc1d90301851b"
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "browser": {
+    "version": "141.0.7390.37",
+    "chromiumSandbox": true,
+    "commandLine": [
+      "/home/runner/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell",
+      "--disable-field-trial-config",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-back-forward-cache",
+      "--disable-breakpad",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--no-default-browser-check",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-extensions",
+      "--disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument",
+      "--enable-features=CDPScreenshotNewSurface",
+      "--allow-pre-commit-input",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-popup-blocking",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--force-color-profile=srgb",
+      "--metrics-recording-only",
+      "--no-first-run",
+      "--password-store=basic",
+      "--use-mock-keychain",
+      "--no-service-autorun",
+      "--export-tagged-pdf",
+      "--disable-search-engine-choice-screen",
+      "--unsafely-disable-devtools-self-xss-warnings",
+      "--edge-skip-compat-layer-relaunch",
+      "--enable-automation",
+      "--headless",
+      "--hide-scrollbars",
+      "--mute-audio",
+      "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+      "--user-data-dir=/tmp/playwright_chromiumdev_profile-ensVAF",
+      "--remote-debugging-pipe",
+      "--no-startup-window",
+      "--use-gl=angle",
+      "--use-angle=swiftshader-webgl",
+      "--ozone-platform=headless",
+      "--allow-pre-commit-input"
+    ]
+  },
+  "prints": [
+    {
+      "locale": "ja",
+      "pdf": "print-ja.pdf",
+      "sha256": "0fe40e0b8eb7e0e78e5ab3c85807178feceb3e6834f2f4ed5c4c92f4509e2297",
+      "pages": 1,
+      "contractSha256": "104da3f66822f6f093839f4937784e36473e86364303423c01be21ce6985dcd9",
+      "pixels": [
+        {
+          "page": 1,
+          "width": 595,
+          "height": 842,
+          "darkPixels": 16524,
+          "inkBounds": {
+            "minX": 33,
+            "minY": 39,
+            "maxX": 560,
+            "maxY": 731
+          },
+          "png": "print-ja-page-1.png"
+        }
+      ]
+    },
+    {
+      "locale": "en",
+      "pdf": "print-en.pdf",
+      "sha256": "f80fa55c76ba7dbf57e0ceed95b6ea9285225e1374f52bb5403d5ab54ff66898",
+      "pages": 1,
+      "contractSha256": "104da3f66822f6f093839f4937784e36473e86364303423c01be21ce6985dcd9",
+      "pixels": [
+        {
+          "page": 1,
+          "width": 595,
+          "height": 842,
+          "darkPixels": 16452,
+          "inkBounds": {
+            "minX": 33,
+            "minY": 39,
+            "maxX": 560,
+            "maxY": 744
+          },
+          "png": "print-en-page-1.png"
+        }
+      ]
+    }
+  ],
+  "finishedAt": "2026-10-05T06:45:32.099Z",
+  "requests": [
+    "http://127.0.0.1:4173/",
+    "file:///home/runner/work/port-rewire/port-rewire/dist/port-rewire.html"
+  ]
+}
